@@ -41,7 +41,7 @@ export const getCodesArticles = (req, res) => {
     for (let i = 0; i< articles.length;i++){
         listCodesArticles.push(articles[i].codeArticles);
     }
-    res.send(listCodesArticles);
+    res.send({codeArticles:listCodesArticles});
 }
 
 export const getCodesArticlesByModele = (req, res) => {
