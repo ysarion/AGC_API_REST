@@ -18,13 +18,13 @@ router.get('/modeles', getArticlesModeles);
     GET uri/articles/codesArticle
     Recupérer la liste des codes articles
  **/
-router.get('/codesArticle', getCodesArticles);
+router.get('/codesArticles', getCodesArticles);
 
 /**
     GET uri/articles/codesArticle/modele/:idModele
     Recupérer la liste des codes articles
  **/
-router.get('/codesArticle/modele/:idModele', getCodesArticlesByModele);
+router.get('/codesArticles/modele/:idModele', getCodesArticlesByModele);
 
 export default router;
 
