@@ -36,7 +36,7 @@ export const getTris = (req, res) => {
 
 export const getTri = (req, res) => {
     //@todo retrieve data from db
-    for (let i = 0; i < audits.length; i++) {
+    for (let i = 0; i < tris.length; i++) {
         if (tris[i].id === parseInt(req.params['id'])) {
             res.send(tris[i]);
             return;

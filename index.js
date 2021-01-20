@@ -5,6 +5,7 @@ import criteresRoutes from './routes/criteres.js'
 import articlesRoutes from './routes/articles.js'
 import auditRoutes from './routes/audit.js'
 import trisRoutes from './routes/tris.js'
+import crashQualitesRoutes from './routes/crashQualite.js'
 import cors from 'cors'
 
 const app = express()
@@ -18,6 +19,7 @@ app.use('/criteres', criteresRoutes)
 app.use('/articles', articlesRoutes)
 app.use('/audits', auditRoutes)
 app.use('/tris', trisRoutes)
+app.use('/crashQualites', crashQualitesRoutes)
 
 
 app.listen(port, () => {
