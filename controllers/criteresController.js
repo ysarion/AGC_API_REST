@@ -1,4 +1,4 @@
-const criteres = [
+const criteresController = [
     {id: 1, fk_typeCriteres: 1, nomCritere: "coup blanc", infoDemerite: "2mm -> 3 | 3mm -> 5 | 5mm -> 20"},
     {id: 2, fk_typeCriteres: 1, nomCritere: "griffes", infoDemerite: "2mm -> 3 | 3mm -> 5 | 5mm -> 20"}
 ]
@@ -21,7 +21,7 @@ const critereTypes = [
 
 export const getCriteres = (req, res) => {
     //@todo retrieve data from db
-    res.send(criteres);
+    res.send(criteresController);
 }
 
 export const getAllCritereProcess = (req, res) => {
@@ -38,10 +38,10 @@ export const getAllCriteresByProcess = (req, res) => {
             listCritId.push(criteres_process_joinTable[i].fk_criteres);
         }
     }
-    for (let i = 0; i < criteres.length; i++) {
+    for (let i = 0; i < criteresController.length; i++) {
         for (let j = 0; j <= listCritId.length; j++) {
-            if (criteres[i].id === listCritId[j]) {
-                critToSend.push(criteres[i]);
+            if (criteresController[i].id === listCritId[j]) {
+                critToSend.push(criteresController[i]);
             }
         }
     }

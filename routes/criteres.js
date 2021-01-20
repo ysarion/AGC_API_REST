@@ -1,5 +1,5 @@
 import express from 'express';
-import {getCriteres, getAllCritereProcess, getAllCriteresByProcess,getAllTypesCriteres} from "../controllers/criteres.js";
+import {getCriteres, getAllCritereProcess, getAllCriteresByProcess,getAllTypesCriteres} from "../controllers/criteresController.js";
 
 const router = express.Router();
 

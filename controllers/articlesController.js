@@ -1,4 +1,4 @@
-const articles = [
+const articlesController = [
     {
         idArticle: 1,
         codeArticles: 650187,
@@ -27,7 +27,7 @@ const articlesModele = [
 
 export const getArticles = (req, res) => {
     //@todo retrieve data from db
-    res.send(articles);
+    res.send(articlesController);
 }
 
 export const getArticlesModeles = (req, res) => {
@@ -38,8 +38,8 @@ export const getArticlesModeles = (req, res) => {
 export const getCodesArticles = (req, res) => {
     //@todo retrieve data from db
     let listCodesArticles = [];
-    for (let i = 0; i< articles.length;i++){
-        listCodesArticles.push(articles[i].codeArticles);
+    for (let i = 0; i< articlesController.length; i++){
+        listCodesArticles.push(articlesController[i].codeArticles);
     }
     res.send({codeArticles:listCodesArticles});
 }
@@ -47,9 +47,9 @@ export const getCodesArticles = (req, res) => {
 export const getCodesArticlesByModele = (req, res) => {
     //@todo retrieve data from db
     let listCodesArticlesByModel = [];
-    for (let i = 0; i< articles.length;i++){
-        if(articles[i].modele === parseInt(req.params['idModele'])){
-            listCodesArticlesByModel.push(articles[i].codeArticles);
+    for (let i = 0; i< articlesController.length; i++){
+        if(articlesController[i].modele === parseInt(req.params['idModele'])){
+            listCodesArticlesByModel.push(articlesController[i].codeArticles);
         }
     }
     res.send(listCodesArticlesByModel);
