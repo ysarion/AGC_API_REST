@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import usersRoutes from './routes/users.js'
 import criteresRoutes from './routes/criteres.js'
 import articlesRoutes from './routes/articles.js'
+import auditRoutes from './routes/audit.js'
 import cors from 'cors'
 
 const app = express()
@@ -14,6 +15,7 @@ app.use(cors());
 app.use('/users', usersRoutes)
 app.use('/criteres', criteresRoutes)
 app.use('/articles', articlesRoutes)
+app.use('/audits', auditRoutes)
 
 
 app.listen(port, () => {
