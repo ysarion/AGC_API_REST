@@ -8,13 +8,13 @@ const router = express.Router();
  */
 router.get('/', getTris);
 /**
- * GET uri/audit/:id
+ * GET uri/tris/:id
  * Consulter un tri
  */
 router.get('/:id', getTri);
 
 /**
- * POST uri/audit
+ * POST uri/tris
  * Enregistrer un nouveau tri
  */
 router.post('/', postTri);
