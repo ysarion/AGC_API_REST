@@ -54,3 +54,14 @@ export const getCodesArticlesByModele = (req, res) => {
     }
     res.send(listCodesArticlesByModel);
 }
+
+export const getArticleByCode = (req, res) => {
+    //@todo retrieve data from db
+    let listArticlesByCode = [];
+    for (let i = 0; i< articlesController.length; i++){
+        if(articlesController[i].codeArticles === parseInt(req.params['code'])){
+            listArticlesByCode.push(articlesController[i]);
+        }
+    }
+    res.send(listArticlesByCode);
+}

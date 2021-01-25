@@ -1,5 +1,5 @@
 import express from 'express';
-import {getArticles, getArticlesModeles, getCodesArticles, getCodesArticlesByModele} from '../controllers/articlesController.js'
+import {getArticles, getArticlesModeles, getCodesArticles, getCodesArticlesByModele,getArticleByCode} from '../controllers/articlesController.js'
 const router = express.Router();
 
 /**
@@ -25,6 +25,12 @@ router.get('/codesArticles', getCodesArticles);
     Recupérer la liste des codes articles
  **/
 router.get('/codesArticles/modele/:idModele', getCodesArticlesByModele);
+
+/**
+ GET uri/articles/:code
+ Recupérer un article en utilisant le code article
+ **/
+router.get('/:code', getArticleByCode);
 
 export default router;
 
