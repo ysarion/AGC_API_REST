@@ -1,6 +1,6 @@
 const usersController = [
-    {id: 1, firstname: 'jeremy', lastName: 'Daix', BE: 117059, Role: 'User', Equipe: null, Tracabilite: null},
-    {id: 2, firstname: 'Pierre', lastName: 'Faidherbe', BE: 117060, Role: 'User', Equipe: null, Tracabilite: null}
+    {id: 1, firstName: 'jeremy', lastName: 'Daix', BE: 117059, role: 'User', equipe: null, tracabilite: null},
+    {id: 2, firstName: 'Pierre', lastName: 'Faidherbe', BE: 117060, role: 'User', equipe: null, tracabilite: null}
 ]
 
 export const getUsers = (req, res) => {
