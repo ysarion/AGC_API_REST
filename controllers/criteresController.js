@@ -1,6 +1,31 @@
 const criteresController = [
-    {id: 1, fk_typeCriteres: 1, nomCritere: "coup blanc", infoDemerite: "2mm -> 3 | 3mm -> 5 | 5mm -> 20"},
-    {id: 2, fk_typeCriteres: 1, nomCritere: "griffes", infoDemerite: "2mm -> 3 | 3mm -> 5 | 5mm -> 20"}
+    {
+        id: 1,
+        fk_typeCriteres: 1,
+        nomCritere: "coup blanc",
+        infoDemerite: "2mm -> 3 | 3mm -> 5 | 5mm -> 20",
+        typeObservation: "Dem"
+    },
+    {
+        id: 2,
+        fk_typeCriteres: 1,
+        nomCritere: "griffes",
+        infoDemerite: "2mm -> 3 | 3mm -> 5 | 5mm -> 20",
+        typeObservation: "Dem"
+    },
+    {
+        id: 3,
+        fk_typeCriteres: 4,
+        nomCritere: "Transparence BN",
+        infoDemerite: "Transparence -> 5",
+        typeObservation: "OK/NOK"
+    }, {
+        id: 4,
+        fk_typeCriteres: 4,
+        nomCritere: "Points manquants",
+        infoDemerite: "Dégradé bouché incomplet manque point -> 5",
+        typeObservation: "Nombre"
+    }
 ]
 const criteresProcess = [
     {id: 1, nomProcess: "HUD"},
@@ -12,10 +37,15 @@ const criteres_process_joinTable = [
     {fk_criteres: 1, fk_process: 1},
     {fk_criteres: 1, fk_process: 2},
     {fk_criteres: 2, fk_process: 2},
+    {fk_criteres: 3, fk_process: 2},
+    {fk_criteres: 3, fk_process: 1},
+    {fk_criteres: 4, fk_process: 2},
+    {fk_criteres: 4, fk_process: 1}
 ]
 const critereTypes = [
     {id: 1, type: "Aspect"},
     {id: 2, type: "Autres"},
+    {id: 4, type: "Aspect bande noire"},
     {id: 3, type: "Addons"}
 ]
 
