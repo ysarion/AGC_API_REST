@@ -19,7 +19,6 @@ export const getUsers = (req, res) => {
 }
 
 export const getUser = (req, res) => {
-    //@todo retrieve data from db
     (async () => {
         try {
             await sql.connect(config)
