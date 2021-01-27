@@ -22,7 +22,7 @@ router.get('/codesArticles', getCodesArticles);
 
 /**
     GET uri/articles/codesArticle/modele/:idModele
-    Recupérer la liste des codes articles
+    Recupérer la liste des codes articles par modele
  **/
 router.get('/codesArticles/modele/:idModele', getCodesArticlesByModele);
 
