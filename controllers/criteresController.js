@@ -30,11 +30,11 @@ export const getAllCriteresByProcess = (req, res) => {
         try {
             await sql.connect(config)
             let param = parseInt(req.params['idProcess']);
-            let result = await sql.query('SELECT * FROM Criteres LEFT JOIN Criteres_Process ON critereID = FK_critereID where FK_processID = ' + param)
+            let result = await sql.query('SELECT * FROM Criteres LEFT JOIN Criteres_Process ON critereID = FK_critereID LEFT JOIN typesCriteres ON FK_TypeCriteres = typeCritereId where FK_processID =' + param)
             res.send(result.recordset);
         } catch (err) {
             console.log(err);
-            res.send('L\'utilisateur recherché n\'existe pas en db');
+            res.send('Aucun critère trouvé');
         }
     })()
 }
