@@ -24,7 +24,7 @@ export const getUser = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params.id);
             let result = await sql.query('select * from Users where idUser = '+param)
-            res.send(result.recordset);
+            res.send(result.recordset[0]);
         }catch (err){
             console.log(err);
             res.send('L\'utilisateur recherché n\'existe pas en db');
