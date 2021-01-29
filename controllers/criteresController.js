@@ -6,9 +6,10 @@ export const getCriteres = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Criteres')
-            res.send(result.recordset);
+            res.status(200).send(result.recordset);
         } catch (e) {
             console.log(e);
+            res.status(400).send('erreur : '+e);
         }
     })()
 }
@@ -18,9 +19,9 @@ export const getAllCritereProcess = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Process')
-            res.send(result.recordset);
+            res.status(200).send(result.recordset);
         } catch (e) {
-            console.log(e);
+            res.status(400).send('erreur : '+e);
         }
     })()
 }
@@ -31,10 +32,9 @@ export const getAllCriteresByProcess = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params['idProcess']);
             let result = await sql.query('SELECT * FROM Criteres LEFT JOIN Criteres_Process ON critereID = FK_critereID LEFT JOIN typesCriteres ON FK_TypeCriteres = typeCritereId where FK_processID =' + param)
-            res.send(result.recordset);
+            res.status(200).send(result.recordset);
         } catch (err) {
-            console.log(err);
-            res.send('Aucun critère trouvé');
+            res.status(400).send('erreur : '+err);
         }
     })()
 }
@@ -44,9 +44,9 @@ export const getAllTypesCriteres = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('SELECT * FROM typesCriteres')
-            res.send(result.recordset);
+            res.status(200).send(result.recordset);
         } catch (e) {
-            console.log(e);
+            res.status(400).send('erreur' + e);
         }
     })()
 }

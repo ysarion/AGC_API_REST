@@ -10,9 +10,10 @@ export const getUsers = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Users')
-            res.send(result.recordset);
+            res.status(200).send(result.recordset);
         }catch (e){
             console.log(e);
+            res.status(400).send('erreur : '+ e);
         }
     })()
 
@@ -24,10 +25,10 @@ export const getUser = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params.id);
             let result = await sql.query('select * from Users where idUser = '+param)
-            res.send(result.recordset[0]);
+            res.status(200).send(result.recordset[0]);
         }catch (err){
             console.log(err);
-            res.send('L\'utilisateur recherché n\'existe pas en db');
+            res.status(400).send('L\'utilisateur recherché n\'existe pas en db');
         }
     })()
 }
