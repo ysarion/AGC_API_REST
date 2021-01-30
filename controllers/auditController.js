@@ -2,50 +2,38 @@ import joi from 'joi'
 import sql from 'mssql'
 import {config} from "../Database/config.js";
 
-const audits = [
-    {
-        id: 1,
-        fk_user: 1,
-        fk_articles: 1,
-        four: "Four 1",
-        numContainer: 150551,
-        totalVerres: 124,
-        resultPourcentage: 98,
-        objectifAnnuel: 97,
-        rating: "A",
-        commentaireGeneral: null,
-        dateDeb: "2016-12-21 8:00:00.000",
-        dateFin: "2016-12-21 16:00:00.000"
-    },
-    {
-        id: 2,
-        fk_user: 1,
-        fk_articles: 1,
-        four: "Four 1",
-        numContainer: 145254,
-        totalVerres: 154,
-        resultPourcentage: 97,
-        objectifAnnuel: 97,
-        rating: "B",
-        commentaireGeneral: null,
-        dateDeb: "2016-12-23 8:00:00.000",
-        dateFin: "2016-12-23 16:00:00.000"
-    }
-]
-
 export const getAudits = (req, res) => {
-    //@todo retrieve data from db
-    res.send(audits);
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from Audits')
+            res.status(200).send(result.recordset);
+        }catch (err){
+            console.log(err);
+            res.status(400).send('erreur : '+err);
+        }
+    })()
 }
 
 export const getAudit = (req, res) => {
-    //@todo retrieve data from db
-    for (let i = 0; i < audits.length; i++) {
-        if (audits[i].id === parseInt(req.params['id'])) {
-            res.send(audits[i]);
-            return;
+    (async () => {
+        try {
+            await sql.connect(config)
+            let param = parseInt(req.params['id'])
+            let result = await sql.query('select * from Audits where auditId = '+param)
+            if(result.recordset[0] === undefined) res.status(400).send("Audit with the given id is not in database")
+            else {
+                let SearchForCrit = await sql.query('select * from Audit_Criteres where FK_auditId = '+param)
+                let arrayToSend =  result.recordset[0];
+                arrayToSend['criteres'] = SearchForCrit.recordset
+                console.log(arrayToSend);
+                res.status(200).send(arrayToSend)
+            }
+        }catch (err){
+            console.log(err);
+            res.status(400).send('erreur : '+err);
         }
-    }
+    })()
 }
 
 export const postAudit = (req, res) => {
