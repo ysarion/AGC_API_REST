@@ -33,7 +33,9 @@ export const getTris = (req, res) => {
     //@todo retrieve data from db
     res.send(tris);
 }
-
+export const getTypesTris =(req,res) => {
+    res.send('liste type tris');
+}
 export const getTri = (req, res) => {
     //@todo retrieve data from db
     for (let i = 0; i < tris.length; i++) {
