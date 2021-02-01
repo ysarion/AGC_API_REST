@@ -1,3 +1,6 @@
+import sql from "mssql";
+import {config} from "../Database/config.js";
+
 const tris = [
     {
         id: 1,
@@ -30,20 +33,64 @@ const tris = [
 ]
 
 export const getTris = (req, res) => {
-    //@todo retrieve data from db
-    res.send(tris);
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from Tris')
+            if(result.recordset[0] === undefined) res.status(400).send("Aucun tri en base de donnée")
+            else res.status(200).send(result.recordset);
+        }catch (err){
+            console.log(err);
+            res.status(400).send('erreur : '+err);
+        }
+    })()
 }
 export const getTypesTris =(req,res) => {
-    res.send('liste type tris');
-}
-export const getTri = (req, res) => {
-    //@todo retrieve data from db
-    for (let i = 0; i < tris.length; i++) {
-        if (tris[i].id === parseInt(req.params['id'])) {
-            res.send(tris[i]);
-            return;
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from TypesTris')
+            res.status(200).send(result.recordset);
+        }catch (err){
+            console.log(err);
+            res.status(400).send('erreur : '+err);
         }
-    }
+    })()
+}
+
+export const getTrisCriteres = (req,res) =>{
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from Criteres where FK_TypeCriteres = 8')
+            if(result.recordset[0] === undefined) res.status(400).send("Aucun tri en base de donnée")
+            else res.status(200).send(result.recordset);
+        }catch (err){
+            console.log(err);
+            res.status(400).send('erreur : '+err);
+        }
+    })()
+}
+
+export const getTri = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let param = parseInt(req.params['id'])
+            let result = await sql.query('select * from Tris where triId = '+param)
+            if(result.recordset[0] === undefined) res.status(400).send("Tri with the given id is not in database")
+            else {
+                let SearchForCrit = await sql.query('select * from Tris_Criteres where FK_triId = '+param)
+                let arrayToSend =  result.recordset[0];
+                arrayToSend['criteres'] = SearchForCrit.recordset
+                console.log(arrayToSend);
+                res.status(200).send(arrayToSend)
+            }
+        }catch (err){
+            console.log(err);
+            res.status(400).send('erreur : '+err);
+        }
+    })()
 }
 
 export const postTri = (req, res) => {
