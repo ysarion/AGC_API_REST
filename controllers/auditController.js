@@ -2,6 +2,11 @@ import joi from 'joi'
 import sql from 'mssql'
 import {config} from "../Database/config.js";
 
+/**
+ * Function use to get all audits
+ * @param req
+ * @param res
+ */
 export const getAudits = (req, res) => {
     (async () => {
         try {
@@ -14,7 +19,11 @@ export const getAudits = (req, res) => {
         }
     })()
 }
-
+/**
+ * Function use to get 1 audit by id
+ * @param req
+ * @param res
+ */
 export const getAudit = (req, res) => {
     (async () => {
         try {
@@ -36,6 +45,11 @@ export const getAudit = (req, res) => {
     })()
 }
 
+/**
+ * Function use to insert an audit in database
+ * @param req
+ * @param res
+ */
 export const postAudit = (req, res) => {
     // Schema du post :
     let criteresAudit = joi.object({

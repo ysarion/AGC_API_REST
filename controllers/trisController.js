@@ -2,37 +2,11 @@ import sql from "mssql";
 import {config} from "../Database/config.js";
 import joi from "joi";
 
-const tris = [
-    {
-        id: 1,
-        fk_user: 1,
-        fk_articles: 1,
-        fk_typeTris: 1,
-        fk_market: 1,
-        numGallia: 14524455,
-        numOS: 888723,
-        numContainer: 150551,
-        nbPieces: 316,
-        commentaire: null,
-        dateDeb: "2016-12-21 8:00:00.000",
-        dateFin: "2016-12-21 16:00:00.000"
-    },
-    {
-        id: 2,
-        fk_user: 2,
-        fk_articles: 1,
-        fk_typeTris: 3,
-        fk_market: 1,
-        numGallia: 5422445,
-        numOS: 64121,
-        numContainer: 887126,
-        nbPieces: 135,
-        commentaire: null,
-        dateDeb: "2016-12-21 8:00:00.000",
-        dateFin: "2016-12-21 16:00:00.000"
-    }
-]
-
+/**
+ * Function use to get all tris
+ * @param req
+ * @param res
+ */
 export const getTris = (req, res) => {
     (async () => {
         try {
@@ -46,6 +20,12 @@ export const getTris = (req, res) => {
         }
     })()
 }
+
+/**
+ * function use to get all type of tris
+ * @param req
+ * @param res
+ */
 export const getTypesTris =(req,res) => {
     (async () => {
         try {
@@ -59,6 +39,11 @@ export const getTypesTris =(req,res) => {
     })()
 }
 
+/**
+ * function use to get all critere that a tri use
+ * @param req
+ * @param res
+ */
 export const getTrisCriteres = (req,res) =>{
     (async () => {
         try {
@@ -73,6 +58,11 @@ export const getTrisCriteres = (req,res) =>{
     })()
 }
 
+/**
+ * function use to get a tri by id in database
+ * @param req
+ * @param res
+ */
 export const getTri = (req, res) => {
     (async () => {
         try {
@@ -93,6 +83,11 @@ export const getTri = (req, res) => {
     })()
 }
 
+/**
+ * function use to insert a tri in database
+ * @param req
+ * @param res
+ */
 export const postTri = (req, res) => {
     // Schema du post :
     let criteresTri = joi.object({
