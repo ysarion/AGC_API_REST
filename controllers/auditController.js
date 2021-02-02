@@ -84,7 +84,10 @@ export const postAudit = (req, res) => {
             res.status(500).send("erreur : "+e);
         }
     })();
-    // Pour avoir le dernier enregistrement on doit recupérer l'id de l'audit créé :
+    /*
+        ENREGISTREMENT DES CRITERES LIES A L AUDIT
+        Pour avoir le dernier enregistrement on doit recupérer l'id de l'audit créé :
+     */
     (async () => {
         try {
             await sql.connect(config)

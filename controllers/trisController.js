@@ -1,5 +1,6 @@
 import sql from "mssql";
 import {config} from "../Database/config.js";
+import joi from "joi";
 
 const tris = [
     {
@@ -83,7 +84,6 @@ export const getTri = (req, res) => {
                 let SearchForCrit = await sql.query('select * from Tris_Criteres where FK_triId = '+param)
                 let arrayToSend =  result.recordset[0];
                 arrayToSend['criteres'] = SearchForCrit.recordset
-                console.log(arrayToSend);
                 res.status(200).send(arrayToSend)
             }
         }catch (err){
@@ -94,7 +94,91 @@ export const getTri = (req, res) => {
 }
 
 export const postTri = (req, res) => {
-    //@todo retrieve data from db
-    tris.push(req.body);
-    res.send("ok");
+    // Schema du post :
+    let criteresTri = joi.object({
+        FK_critereId: joi.number().integer().required(),
+        valueCritere: joi.string().max(50).required()
+    })
+    let triObjectSchema = joi.object({
+        fk_user: joi.number().integer().required(),
+        fk_articles: joi.number().integer().required(),
+        fk_typeTris: joi.number().integer().required(),
+        numGallia: joi.number().integer().required(),
+        numOS: joi.number().integer().required(),
+        nbPieces: joi.number().integer().required(),
+        commentaire: joi.string().optional().allow(null),
+        dateDeb: joi.date().required(),
+        dateFin: joi.date(),
+        criteres: joi.array().items(criteresTri).required()
+    })
+    const schemaValidation = triObjectSchema.validate(req.body);
+    if (schemaValidation.error) {
+        res.status(400).send("error : "+schemaValidation.error.details[0].message)
+        return
+    }
+    // Si le schéma correspond, on peut faire l'insert :
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('fk_user', sql.Int, parseInt(req.body.fk_user))
+                .input('fk_typeTris', sql.Int, parseInt(req.body.fk_typeTris))
+                .input('fk_market', sql.Int, parseInt(req.body.fk_typeTris))
+                .input('fk_article', sql.Int, parseInt(req.body.fk_articles))
+                .input('numGallia', sql.Int, parseInt(req.body.numGallia))
+                .input('nbPieces', sql.Int, parseInt(req.body.nbPieces))
+                .input('numOS', sql.Int, parseInt(req.body.numOS))
+                .input('commentaire', sql.VarChar(100), req.body.commentaire)
+                .input('dateDeb', sql.DateTime, req.body.dateDeb)
+                .query('INSERT INTO Tris (' +
+                    'numGallia,' +
+                    'nbPieces,' +
+                    'numOS,' +
+                    'commentaireGeneral,' +
+                    'dateDebut,' +
+                    'dateFin,' +
+                    'fk_typeTri,' +
+                    'fk_market,' +
+                    'fk_user,' +
+                    'fk_article) ' +
+                    'values (' +
+                    '@numGallia,' +
+                    '@nbPieces,' +
+                    '@numOS,' +
+                    '@commentaire,' +
+                    '@dateDeb,' +
+                    'GETDATE(),' +
+                    '@fk_typeTris,' +
+                    '@fk_market,' +
+                    '@fk_user,' +
+                    '@fk_article)')
+        } catch (e) {
+            res.status(500).send("erreur : "+e);
+        }
+    })();
+    /*
+        ENREGISTREMENT DES CRITERES LIES AU TRI
+        Pour avoir le dernier enregistrement on doit recupérer l'id du tri créé :
+     */
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('SELECT TOP 1 triId FROM Tris ORDER BY triId DESC');
+            //console.log("L'id du tri inseré est de : "+result.recordset[0].auditId)
+            const triId = result.recordset[0].triId;
+            //on boucle l'insert de critères
+            for (let i = 0; i< req.body.criteres.length;i++){
+                let pool = await sql.connect(config)
+                const request = pool.request();
+                request.input('FK_triId',sql.Int, parseInt(triId))
+                    .input('FK_critereId',sql.Int, parseInt(req.body.criteres[i].FK_critereId))
+                    .input('valueCritere',sql.VarChar,req.body.criteres[i].valueCritere)
+                    .query('INSERT INTO Tris_Criteres (FK_triId,FK_critereId,valueCritere) VALUES (@FK_triId,@FK_critereId,@valueCritere)')
+            }
+            res.status(200).send('insert OK')
+        } catch (err) {
+            res.status(400).send('Error : '+err)
+        }
+    })()
 }
