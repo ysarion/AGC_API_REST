@@ -12,11 +12,11 @@ export const getTris = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Tris')
-            if(result.recordset[0] === undefined) res.status(400).send("Aucun tri en base de donnée")
+            if (result.recordset[0] === undefined) res.status(400).send("Aucun tri en base de donnée")
             else res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -26,15 +26,33 @@ export const getTris = (req, res) => {
  * @param req
  * @param res
  */
-export const getTypesTris =(req,res) => {
+export const getTypesTris = (req, res) => {
     (async () => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from TypesTris')
             res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
+        }
+    })()
+}
+
+/**
+ * function use to get all avo's location
+ * @param req
+ * @param res
+ */
+export const getLieuxAVO = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from LieuxAVO')
+            res.status(200).send(result.recordset);
+        } catch (err) {
+            console.log(err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -44,16 +62,16 @@ export const getTypesTris =(req,res) => {
  * @param req
  * @param res
  */
-export const getTrisCriteres = (req,res) =>{
+export const getTrisCriteres = (req, res) => {
     (async () => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Criteres where FK_TypeCriteres = 8')
-            if(result.recordset[0] === undefined) res.status(400).send("Aucun tri en base de donnée")
+            if (result.recordset[0] === undefined) res.status(400).send("Aucun tri en base de donnée")
             else res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -68,17 +86,17 @@ export const getTri = (req, res) => {
         try {
             await sql.connect(config)
             let param = parseInt(req.params['id'])
-            let result = await sql.query('select * from Tris where triId = '+param)
-            if(result.recordset[0] === undefined) res.status(400).send("Tri with the given id is not in database")
+            let result = await sql.query('select * from Tris where triId = ' + param)
+            if (result.recordset[0] === undefined) res.status(400).send("Tri with the given id is not in database")
             else {
-                let SearchForCrit = await sql.query('select * from Tris_Criteres where FK_triId = '+param)
-                let arrayToSend =  result.recordset[0];
+                let SearchForCrit = await sql.query('select * from Tris_Criteres where FK_triId = ' + param)
+                let arrayToSend = result.recordset[0];
                 arrayToSend['criteres'] = SearchForCrit.recordset
                 res.status(200).send(arrayToSend)
             }
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -108,7 +126,7 @@ export const postTri = (req, res) => {
     })
     const schemaValidation = triObjectSchema.validate(req.body);
     if (schemaValidation.error) {
-        res.status(400).send("error : "+schemaValidation.error.details[0].message)
+        res.status(400).send("error : " + schemaValidation.error.details[0].message)
         return
     }
     // Si le schéma correspond, on peut faire l'insert :
@@ -149,7 +167,7 @@ export const postTri = (req, res) => {
                     '@fk_user,' +
                     '@fk_article)')
         } catch (e) {
-            res.status(500).send("erreur : "+e);
+            res.status(500).send("erreur : " + e);
         }
     })();
     /*
@@ -163,17 +181,17 @@ export const postTri = (req, res) => {
             //console.log("L'id du tri inseré est de : "+result.recordset[0].auditId)
             const triId = result.recordset[0].triId;
             //on boucle l'insert de critères
-            for (let i = 0; i< req.body.criteres.length;i++){
+            for (let i = 0; i < req.body.criteres.length; i++) {
                 let pool = await sql.connect(config)
                 const request = pool.request();
-                request.input('FK_triId',sql.Int, parseInt(triId))
-                    .input('FK_critereId',sql.Int, parseInt(req.body.criteres[i].FK_critereId))
-                    .input('valueCritere',sql.VarChar,req.body.criteres[i].valueCritere)
+                request.input('FK_triId', sql.Int, parseInt(triId))
+                    .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
+                    .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
                     .query('INSERT INTO Tris_Criteres (FK_triId,FK_critereId,valueCritere) VALUES (@FK_triId,@FK_critereId,@valueCritere)')
             }
             res.status(200).send('insert OK')
         } catch (err) {
-            res.status(400).send('Error : '+err)
+            res.status(400).send('Error : ' + err)
         }
     })()
 }

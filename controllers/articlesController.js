@@ -66,7 +66,9 @@ export const getCodesArticlesByModele = (req, res) => {
         try {
             await sql.connect(config)
             let param = parseInt(req.params['idModele'])
+            console.log(param);
             let result = await sql.query('select articleId,codeArticle from Articles where fk_model = '+param)
+            console.log(result);
             res.status(200).send(result.recordset);
         }catch (err){
             console.log(err);

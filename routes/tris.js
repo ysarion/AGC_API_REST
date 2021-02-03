@@ -1,5 +1,5 @@
 import express from 'express';
-import {getTris,getTri,postTri,getTypesTris,getTrisCriteres} from '../controllers/trisController.js'
+import {getTris,getTri,postTri,getTypesTris,getTrisCriteres, getLieuxAVO} from '../controllers/trisController.js'
 const router = express.Router();
 
 /**
@@ -13,6 +13,12 @@ router.get('/', getTris);
  * Récupérer la liste de tout les tris
  */
 router.get('/typesTris', getTypesTris);
+
+/**
+ * GET uri/tris/typesTris/AVO/Lieux
+ * Récupérer la liste de tout les tris
+ */
+router.get('/typesTris/AVO/Lieux', getLieuxAVO);
 
 /**
  * GET uri/tris/criteres
