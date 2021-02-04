@@ -95,3 +95,5 @@ export const getArticleByCode = (req, res) => {
         }
     })()
 }
+
+//@todo POST & PUT METHODE FOR ARTICLE / MODELE

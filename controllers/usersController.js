@@ -94,3 +94,5 @@ export const postUser = (req, res) => {
         }
     })();
 }
+
+//@todo PUT METHOD TO USER
