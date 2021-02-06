@@ -1,5 +1,5 @@
 import express from 'express';
-import {getTris,getTri,postTri,getTypesTris,getTrisCriteres, getLieuxAVO} from '../controllers/trisController.js'
+import {getTris,getTri,postTri,getTypesTris,getTrisCriteres, getLieuxAVO, postTypesTris} from '../controllers/trisController.js'
 const router = express.Router();
 
 /**
@@ -37,6 +37,12 @@ router.get('/:id', getTri);
  * Enregistrer un nouveau tri
  */
 router.post('/', postTri);
+
+/**
+ * POST uri/tris/typesTris
+ * Enregistrer un nouveau tri
+ */
+router.post('/typesTris', postTypesTris);
 
 export default router;
 

@@ -195,3 +195,25 @@ export const postTri = (req, res) => {
         }
     })()
 }
+
+export const postTypesTris = (req,res) => {
+    let typeTry = joi.object({
+        typeTriNom: joi.string().min(3).max(60).required()
+    })
+    let requestValidation = typeTry.validate(req.body);
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('typeTriNom', sql.VarChar(80), req.body.typeTriNom)
+                .query('INSERT INTO TypesTris (typeTriNom) values (@typeTriNom);')
+            res.status(200).send("TypeTriNom was successfully register")
+        } catch (e) {
+            res.status(500).send("erreur : " + e);
+        }
+    })();
+}
