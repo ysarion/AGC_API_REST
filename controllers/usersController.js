@@ -87,13 +87,33 @@ export const postUser = (req, res) => {
                     '@tracabilite,' +
                     '@FK_role,' +
                     '@FK_equipe)');
-            res.status(200).send("The user succesfully register")
+            return res.status(200).send("The user succesfully register")
         } catch (e) {
-            res.status(500).send("erreur : " + e);
+            return res.status(500).send("erreur : " + e);
         }
     })();
 }
 //@TODO post Equipe
-
+export const postEquipe = (req, res) => {
+    let equipe = Joi.object({
+        equipe: Joi.string().min(1).required()
+    })
+    let requestValidation = equipe.validate(req.body)
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('equipe', sql.VarChar, req.body.equipe)
+                .query('INSERT INTO Equipes (equipe) values (@equipe)');
+            return res.status(200).send("The new \"equipe\" was succesfully register")
+        } catch (e) {
+            return res.status(500).send("erreur : " + e);
+        }
+    })();
+}
 //@todo post Role
 //@todo PUT METHOD for USER
