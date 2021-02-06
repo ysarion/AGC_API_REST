@@ -57,15 +57,14 @@ export const postUser = (req, res) => {
     })
     let userValidation = userSchema.validate(req.body);
     if (userValidation.error) {
-        res.status(400).send(userValidation.error.details[0].message)
-        return
+        return res.status(400).send(userValidation.error.details[0].message)
     }
     (async function () {
         try {
             let pool = await sql.connect(config)
             const request = pool.request();
             request
-                .input('nom', sql.VarChar,req.body.nom)
+                .input('nom', sql.VarChar, req.body.nom)
                 .input('prenom', sql.VarChar, req.body.prenom)
                 .input('BE', sql.Int, parseInt(req.body.BE))
                 .input('mail', sql.VarChar, req.body.mail)
@@ -87,12 +86,14 @@ export const postUser = (req, res) => {
                     '@mail,' +
                     '@tracabilite,' +
                     '@FK_role,' +
-                    '@FK_equipe)' );
+                    '@FK_equipe)');
             res.status(200).send("The user succesfully register")
         } catch (e) {
             res.status(500).send("erreur : " + e);
         }
     })();
 }
+//@TODO post Equipe
 
-//@todo PUT METHOD TO USER
+//@todo post Role
+//@todo PUT METHOD for USER

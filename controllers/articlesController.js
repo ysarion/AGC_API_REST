@@ -1,5 +1,6 @@
 import sql from "mssql";
 import {config} from "../Database/config.js";
+import joi from "joi";
 
 /**
  * function use to get all articles
@@ -12,9 +13,9 @@ export const getArticles = (req, res) => {
             await sql.connect(config)
             let result = await sql.query('select * from Articles ')
             res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -30,9 +31,9 @@ export const getArticlesModeles = (req, res) => {
             await sql.connect(config)
             let result = await sql.query('select * from Modeles')
             res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -49,9 +50,9 @@ export const getCodesArticles = (req, res) => {
             await sql.connect(config)
             let result = await sql.query('select codeArticle from Articles')
             res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -67,12 +68,12 @@ export const getCodesArticlesByModele = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params['idModele'])
             console.log(param);
-            let result = await sql.query('select articleId,codeArticle from Articles where fk_model = '+param)
+            let result = await sql.query('select articleId,codeArticle from Articles where fk_model = ' + param)
             console.log(result);
             res.status(200).send(result.recordset);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -87,13 +88,42 @@ export const getArticleByCode = (req, res) => {
         try {
             await sql.connect(config)
             let param = parseInt(req.params['code'])
-            let result = await sql.query('select * from Articles left JOIN Modeles on fk_model = modeleId where codeArticle = '+param)
+            let result = await sql.query('select * from Articles left JOIN Modeles on fk_model = modeleId where codeArticle = ' + param)
             res.status(200).send(result.recordset[0]);
-        }catch (err){
+        } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : '+err);
+            res.status(400).send('erreur : ' + err);
         }
     })()
 }
 
 //@todo POST & PUT METHODE FOR ARTICLE / MODELE
+
+/**
+ * function use to register a new modele
+ * @param req
+ * @param res
+ * @returns {this}
+ */
+export const postModele = (req, res) =>{
+    let modele = joi.object({
+        modele: joi.string().min(3).max(60).required()
+    })
+    let requestValidation = modele.validate(req.body)
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('modele', sql.VarChar(80), req.body.modele)
+                .query('INSERT INTO Modeles (modele) values (@modele);')
+            return res.status(200).send("The new \"modele\" was successfully register")
+        } catch (e) {
+            return res.status(500).send("erreur : " + e);
+        }
+    })();
+}
+// @TODO POST ARTICLE
