@@ -196,6 +196,12 @@ export const postTri = (req, res) => {
     })()
 }
 
+/**
+ * Function use to insert a new type of tri
+ * @param req
+ * @param res
+ * @returns {this}
+ */
 export const postTypesTris = (req,res) => {
     let typeTry = joi.object({
         typeTriNom: joi.string().min(3).max(60).required()
@@ -211,9 +217,37 @@ export const postTypesTris = (req,res) => {
             request
                 .input('typeTriNom', sql.VarChar(80), req.body.typeTriNom)
                 .query('INSERT INTO TypesTris (typeTriNom) values (@typeTriNom);')
-            res.status(200).send("TypeTriNom was successfully register")
+           return res.status(200).send("TypeTriNom was successfully register")
         } catch (e) {
-            res.status(500).send("erreur : " + e);
+            return res.status(500).send("erreur : " + e);
+        }
+    })();
+}
+
+/**
+ * function use to insert a new place of AVO
+ * @param req
+ * @param res
+ * @returns {this}
+ */
+export const postLieuAVO = (req,res) => {
+    let lieuAVO = joi.object({
+        nomLieu: joi.string().min(3).max(30).required()
+    })
+    let requestValidation = lieuAVO.validate(req.body)
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('nomLieu', sql.VarChar(80), req.body.nomLieu)
+                .query('INSERT INTO LieuxAVO (nomLieu,fk_typeTri_AVO) values (@nomLieu,2);')
+            return res.status(200).send("The new \"nomLieu\" was successfully register")
+        } catch (e) {
+            return res.status(500).send("erreur : " + e);
         }
     })();
 }
