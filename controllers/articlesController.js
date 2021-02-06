@@ -97,7 +97,7 @@ export const getArticleByCode = (req, res) => {
     })()
 }
 
-//@todo POST & PUT METHODE FOR ARTICLE / MODELE
+//@todo PUT METHODE FOR ARTICLE / MODELE
 
 /**
  * function use to register a new modele
@@ -105,12 +105,12 @@ export const getArticleByCode = (req, res) => {
  * @param res
  * @returns {this}
  */
-export const postModele = (req, res) =>{
+export const postModele = (req, res) => {
     let modele = joi.object({
         modele: joi.string().min(3).max(60).required()
     })
     let requestValidation = modele.validate(req.body)
-    if(requestValidation.error){
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     (async function () {
@@ -126,4 +126,37 @@ export const postModele = (req, res) =>{
         }
     })();
 }
-// @TODO POST ARTICLE
+
+/**
+ * function use to register a new article in database
+ * @param req
+ * @param res
+ * @returns {this}
+ */
+export const postArticle = (req, res) => {
+    let article = joi.object({
+        codeArticle: joi.number().integer().required(),
+        fk_model: joi.number().integer().required(),
+        descriptionSAP: joi.string().min(6).max(100).required(),
+        partNumber: joi.string().min(3).max(80).required()
+    })
+    let requestValidation = article.validate(req.body)
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('codeArticle', sql.Int, parseInt(req.body.codeArticle))
+                .input('fk_model', sql.Int, parseInt(req.body.fk_model))
+                .input('descriptionSAP', sql.VarChar, req.body.descriptionSAP)
+                .input('partNumber', sql.VarChar, req.body.partNumber)
+                .query('INSERT INTO Articles (codeArticle,fk_model,descriptionSAP,partNumber) values (@codeArticle,@fk_model,@descriptionSAP,@partNumber);')
+            return res.status(200).send("The new \"article\" was successfully register")
+        } catch (e) {
+            return res.status(500).send("erreur : " + e);
+        }
+    })();
+}

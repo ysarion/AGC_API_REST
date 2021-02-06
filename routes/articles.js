@@ -1,5 +1,5 @@
 import express from 'express';
-import {getArticles, getArticlesModeles, getCodesArticles, getCodesArticlesByModele,getArticleByCode,postModele} from '../controllers/articlesController.js'
+import {getArticles, getArticlesModeles, getCodesArticles, getCodesArticlesByModele,getArticleByCode,postModele,postArticle} from '../controllers/articlesController.js'
 const router = express.Router();
 
 /**
@@ -27,8 +27,8 @@ router.get('/codesArticles', getCodesArticles);
 router.get('/codesArticles/modele/:idModele', getCodesArticlesByModele);
 
 /**
- GET uri/articles/:code
- Recupérer un article en utilisant le code article
+ * GET uri/articles/:code
+ * Recupérer un article en utilisant le code article
  **/
 router.get('/:code', getArticleByCode)
 
@@ -37,6 +37,12 @@ router.get('/:code', getArticleByCode)
  * route use to insert a modele in database
  */
 router.post('/modeles',postModele)
+
+/**
+ * POST uri/articles
+ * route use to insert an article in database
+ */
+router.post('/',postArticle)
 
 export default router;
 
