@@ -55,7 +55,7 @@ export const postAudit = (req, res) => {
     // Schema du post :
     let criteresAudit = joi.object({
         FK_critereId: joi.number().integer().required(),
-        obeservation: joi.string().max(30).optional().allow(null),
+        observation: joi.string().max(30).optional().allow(null),
         valueCritere: joi.string().max(50).required()
     })
     let auditObjectSchema = joi.object({
