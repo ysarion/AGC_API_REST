@@ -66,7 +66,8 @@ export const postAudit = (req, res) => {
         totalVerres: joi.number().integer().required(),
         resultPourcentage: joi.number().integer().required(),
         rating: joi.string().min(1).max(1).required(),
-        commentaireGeneral: joi.string().optional().allow(null),
+        commentaireGeneral: joi.string().allow(null).required(),
+        action: joi.string().allow(null).required(),
         objectifAnnuel: joi.number().integer().required(),
         dateDeb: joi.date().required(),
         dateFin: joi.date(),
@@ -92,9 +93,10 @@ export const postAudit = (req, res) => {
                 .input('resultPourcentage', sql.Int, parseInt(req.body.resultPourcentage))
                 .input('rating', sql.VarChar(1), req.body.rating)
                 .input('commentaireGeneral', sql.VarChar(100), req.body.commentaireGeneral)
+                .input('action', sql.VarChar(100), req.body.action)
                 .input('dateDeb', sql.DateTime, req.body.dateDeb)
                 .query('INSERT INTO Audits (four,numContainer,totalVerres,pourcentageResultat,rating,commentaireGeneral,action,dateDebut,dateFin,fk_objectifAnnuel,fk_user,' +
-                    'fk_article) values (@four,@numContainer,@totalVerres,@resultPourcentage,@rating,@commentaireGeneral,null,@dateDeb,GETDATE(),@fk_objectifAnnuel,@fk_user,@fk_article)')
+                    'fk_article) values (@four,@numContainer,@totalVerres,@resultPourcentage,@rating,@commentaireGeneral,@action,@dateDeb,GETDATE(),@fk_objectifAnnuel,@fk_user,@fk_article)')
         } catch (e) {
             res.status(500).send("erreur : " + e);
         }

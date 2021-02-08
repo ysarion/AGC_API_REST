@@ -93,7 +93,6 @@ export const postUser = (req, res) => {
         }
     })();
 }
-//@TODO post Equipe
 export const postEquipe = (req, res) => {
     let equipe = Joi.object({
         equipe: Joi.string().min(1).required()

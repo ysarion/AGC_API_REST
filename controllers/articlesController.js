@@ -44,7 +44,6 @@ export const getArticlesModeles = (req, res) => {
  * @param res
  */
 export const getCodesArticles = (req, res) => {
-    //@todo retrieve data from db
     (async () => {
         try {
             await sql.connect(config)
