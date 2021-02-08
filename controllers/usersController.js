@@ -31,7 +31,7 @@ export const getUser = (req, res) => {
         try {
             await sql.connect(config)
             let param = parseInt(req.params.id);
-            let result = await sql.query('select * from Users where idUser = ' + param)
+            let result = await sql.query('select * from Users where BE = ' + param)
             res.status(200).send(result.recordset[0]);
         } catch (err) {
             console.log(err);
