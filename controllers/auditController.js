@@ -36,11 +36,9 @@ export const getAudit = (req, res) => {
                 let SearchForCrit = await sql.query('select * from Audit_Criteres where FK_auditId = ' + param)
                 let arrayToSend = result.recordset[0];
                 arrayToSend['criteres'] = SearchForCrit.recordset
-                console.log(arrayToSend);
                 res.status(200).send(arrayToSend)
             }
         } catch (err) {
-            console.log(err);
             res.status(400).send('erreur : ' + err);
         }
     })()
@@ -109,15 +107,15 @@ export const postAudit = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('SELECT TOP 1 auditId FROM Audits ORDER BY auditId DESC');
-            //console.log("L'id de l'audit inseré est de : "+result.recordset[0].auditId)
+            console.log("L'id de l'audit inseré est de : "+result.recordset[0].auditId)
             const auditId = result.recordset[0].auditId;
             //on boucle l'insert de critères
+            let pool = await sql.connect(config)
             for (let i = 0; i < req.body.criteres.length; i++) {
-                let pool = await sql.connect(config)
                 const request = pool.request();
                 request.input('FK_auditId', sql.Int, parseInt(auditId))
                     .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
-                    .input('observation', sql.VarChar, req.body.criteres[i].obeservation)
+                    .input('observation', sql.VarChar, req.body.criteres[i].observation)
                     .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
                     .query('INSERT INTO Audit_Criteres (FK_auditId,FK_critereId,observation,valueCritere) VALUES (@FK_auditId,@FK_critereId,@observation,@valueCritere)')
             }
