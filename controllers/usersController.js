@@ -32,10 +32,11 @@ export const getUser = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params.id);
             let result = await sql.query('select * from Users where BE = ' + param)
-            res.status(200).send(result.recordset[0]);
+            if(result.recordset[0] === []) return res.status(204).send('L\'utilisateur recherché n\'existe pas en db');
+            return res.status(200).send(result.recordset[0]);
         } catch (err) {
             console.log(err);
-            res.status(204).send('L\'utilisateur recherché n\'existe pas en db');
+            return res.status(400).send('L\'utilisateur recherché n\'existe pas en db');
         }
     })()
 }
