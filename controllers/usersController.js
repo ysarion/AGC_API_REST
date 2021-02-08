@@ -35,7 +35,7 @@ export const getUser = (req, res) => {
             res.status(200).send(result.recordset[0]);
         } catch (err) {
             console.log(err);
-            res.status(400).send('L\'utilisateur recherché n\'existe pas en db');
+            res.status(204).send('L\'utilisateur recherché n\'existe pas en db');
         }
     })()
 }
