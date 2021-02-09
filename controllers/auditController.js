@@ -12,10 +12,10 @@ export const getAudits = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Audits')
-            res.status(200).send(result.recordset);
+            return res.status(200).send(result.recordset);
         } catch (err) {
             console.log(err);
-            res.status(400).send('erreur : ' + err);
+            return res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -36,13 +36,29 @@ export const getAudit = (req, res) => {
                 let SearchForCrit = await sql.query('select * from Audit_Criteres where FK_auditId = ' + param)
                 let arrayToSend = result.recordset[0];
                 arrayToSend['criteres'] = SearchForCrit.recordset
-                res.status(200).send(arrayToSend)
+                return res.status(200).send(arrayToSend)
             }
         } catch (err) {
-            res.status(400).send('erreur : ' + err);
+            return res.status(400).send('erreur : ' + err);
         }
     })()
 }
+
+export const getObjectifAnnuel = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let param = parseInt(req.params['id'])
+            let result = await sql.query('select * from ObjectifsAnnuel where actif = 1')
+            return res.status(200).send(result.recordset[0])
+
+        } catch (err) {
+            return res.status(400).send('erreur : ' + err);
+        }
+    })()
+
+}
+
 
 /**
  * Function use to insert an audit in database
@@ -96,7 +112,7 @@ export const postAudit = (req, res) => {
                 .query('INSERT INTO Audits (four,numContainer,totalVerres,pourcentageResultat,rating,commentaireGeneral,action,dateDebut,dateFin,fk_objectifAnnuel,fk_user,' +
                     'fk_article) values (@four,@numContainer,@totalVerres,@resultPourcentage,@rating,@commentaireGeneral,@action,@dateDeb,GETDATE(),@fk_objectifAnnuel,@fk_user,@fk_article)')
         } catch (e) {
-            res.status(500).send("erreur : " + e);
+            return res.status(500).send("erreur : " + e);
         }
     })();
     /*
@@ -107,7 +123,7 @@ export const postAudit = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('SELECT TOP 1 auditId FROM Audits ORDER BY auditId DESC');
-            console.log("L'id de l'audit inseré est de : "+result.recordset[0].auditId)
+            console.log("L'id de l'audit inseré est de : " + result.recordset[0].auditId)
             const auditId = result.recordset[0].auditId;
             //on boucle l'insert de critères
             let pool = await sql.connect(config)
@@ -119,9 +135,9 @@ export const postAudit = (req, res) => {
                     .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
                     .query('INSERT INTO Audit_Criteres (FK_auditId,FK_critereId,observation,valueCritere) VALUES (@FK_auditId,@FK_critereId,@observation,@valueCritere)')
             }
-            res.status(200).send('insert OK')
+            return res.status(200).send('The audit was successfully register')
         } catch (err) {
-            res.status(400).send('Error : ' + err)
+            return res.status(400).send('Error : ' + err)
         }
     })()
 }
