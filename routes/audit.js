@@ -1,5 +1,5 @@
 import express from 'express';
-import {getAudits, getAudit, getObjectifAnnuel, postAudit,} from '../controllers/auditController.js'
+import {getAudits, getAudit, getObjectifAnnuel, postAudit,postObjectifAnnuel} from '../controllers/auditController.js'
 
 const router = express.Router();
 
@@ -27,6 +27,12 @@ router.get('/:id', getAudit);
  * Enregistrer un nouvel audit
  */
 router.post('/', postAudit);
+
+/**
+ * POST uri/audits/objectif
+ * Enregistrer un nouvel objectif
+ */
+router.post('/objectif', postObjectifAnnuel);
 
 export default router;
 

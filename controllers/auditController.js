@@ -44,6 +44,11 @@ export const getAudit = (req, res) => {
     })()
 }
 
+/**
+ * function use to get the current objectif of the year
+ * @param req
+ * @param res
+ */
 export const getObjectifAnnuel = (req, res) => {
     (async () => {
         try {
@@ -58,7 +63,6 @@ export const getObjectifAnnuel = (req, res) => {
     })()
 
 }
-
 
 /**
  * Function use to insert an audit in database
@@ -142,6 +146,35 @@ export const postAudit = (req, res) => {
     })()
 }
 
+/**
+ * function use to post a new objectif in database
+ * @param req
+ * @param res
+ * @returns {this}
+ */
+export const postObjectifAnnuel = (req, res) => {
+    let objectif = joi.object({
+        objectif: joi.number().integer().required(),
+        actif: joi.boolean().required()
+    });
+    let requestValidation = objectif.validate(req.body)
+    if (requestValidation.error) {
+        return res.status(400).send("Error : " + requestValidation.error.details[0].message)
+    }
+    (async function () {
+        try {
+            let pool = await sql.connect(config)
+            const request = pool.request();
+            request
+                .input('objectif', sql.VarChar, req.body.objectif)
+                .input('objectif', sql.Boolean, req.body.actif)
+                .query('INSERT INTO ObjectifsAnnuel (objectif,actif) values (@objectif,@actif)');
+            return res.status(200).send("The new \"objectif\" was succesfully register")
+        } catch (e) {
+            return res.status(500).send("erreur : " + e);
+        }
+    })();
+}
 /*
 @   todo Create update route & function
  */
