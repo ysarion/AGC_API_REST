@@ -22,6 +22,44 @@ export const getUsers = (req, res) => {
 }
 
 /**
+ * function use to get all equipe that a user can have
+ * @param req
+ * @param res
+ */
+export const getEquipes = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from Equipes')
+            return res.status(200).send(result.recordset);
+        } catch (e) {
+            console.log(e);
+            return res.status(400).send('erreur : ' + e);
+        }
+    })()
+
+}
+
+/**
+ * function use to get all roles that a user can have
+ * @param req
+ * @param res
+ */
+export const getRoles = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from Roles')
+            return res.status(200).send(result.recordset);
+        } catch (e) {
+            console.log(e);
+            return res.status(400).send('erreur : ' + e);
+        }
+    })()
+
+}
+
+/**
  * function use to get a user by his id
  * @param req
  * @param res

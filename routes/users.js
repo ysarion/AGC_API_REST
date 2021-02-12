@@ -1,9 +1,21 @@
 import express from 'express';
-import {getUsers,getUser,postUser,postEquipe} from '../controllers/usersController.js'
+import {getUsers,getUser,postUser,postEquipe,getEquipes, getRoles} from '../controllers/usersController.js'
 const router = express.Router();
 
 // GET uri/users
 router.get('/', getUsers);
+
+/**
+ * function use to get all equipe possible
+ * uri/users/equipes
+ */
+router.get('/equipes', getEquipes);
+
+/**
+ * function use to get all role possible
+ * uri/users/roles
+ */
+router.get('/roles', getRoles);
 
 // GET uri/users/{id}
 router.get('/:id', getUser);
