@@ -7,10 +7,10 @@ export const getCriteres = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Criteres')
-            res.status(200).send(result.recordset);
+            return res.status(200).send(result.recordset);
         } catch (e) {
             console.log(e);
-            res.status(400).send('erreur : ' + e);
+            return res.status(400).send('erreur : ' + e);
         }
     })()
 }
@@ -20,9 +20,9 @@ export const getAllCritereProcess = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('select * from Process')
-            res.status(200).send(result.recordset);
+            return res.status(200).send(result.recordset);
         } catch (e) {
-            res.status(400).send('erreur : ' + e);
+            return res.status(400).send('erreur : ' + e);
         }
     })()
 }
@@ -33,9 +33,9 @@ export const getAllCriteresByProcess = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params['idProcess']);
             let result = await sql.query('SELECT * FROM Criteres LEFT JOIN Criteres_Process ON critereID = FK_critereID LEFT JOIN typesCriteres ON FK_TypeCriteres = typeCritereId where FK_processID =' + param)
-            res.status(200).send(result.recordset);
+            return res.status(200).send(result.recordset);
         } catch (err) {
-            res.status(400).send('erreur : ' + err);
+            return res.status(400).send('erreur : ' + err);
         }
     })()
 }
@@ -45,9 +45,22 @@ export const getAllTypesCriteres = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('SELECT * FROM typesCriteres')
-            res.status(200).send(result.recordset);
+            return res.status(200).send(result.recordset);
         } catch (e) {
-            res.status(400).send('erreur' + e);
+            return res.status(400).send('erreur' + e);
+        }
+    })()
+
+}
+
+export const getAllCritProcessRelation = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('SELECT * FROM Criteres_Process')
+            return res.status(200).send(result.recordset);
+        } catch (e) {
+            return res.status(400).send('erreur' + e);
         }
     })()
 }
@@ -68,7 +81,7 @@ export const postCriteres = (req, res) => {
     const schemaValidation2 = listProcess.validate(req.body.listProcess)
     if (schemaValidation.error) {
         if (schemaValidation2.error) return res.status(400).send("error : " + schemaValidation2.error.details[0].message + " json object  : {FK_processId: int}")
-        res.status(400).send("error : " + schemaValidation.error.details[0].messages)
+        return res.status(400).send("error : " + schemaValidation.error.details[0].messages)
     }
     // Si le schéma correspond, on peut faire l'insert du critere :
     (async function () {
@@ -82,7 +95,7 @@ export const postCriteres = (req, res) => {
                 .input('FK_typeCriteres', sql.VarChar, req.body.FK_typeCriteres)
                 .query('INSERT INTO Criteres (nomCritere,typeObservation,infoDemerite,FK_typeCriteres) values (@nomCritere,@typeObservation,@infoDemerite,@FK_typeCriteres)');
         } catch (e) {
-            res.status(500).send("erreur : " + e);
+            return res.status(500).send("erreur : " + e);
         }
     })();
     // On doit lié le critère à un ou plusieurs process
@@ -99,9 +112,9 @@ export const postCriteres = (req, res) => {
                     .input('FK_processId', sql.Int, parseInt(req.body.listProcess[i].Fk_processId))
                     .query('INSERT INTO Criteres_Process (FK_critereId,FK_processId) VALUES (@FK_critereId,@FK_processId)')
             }
-            res.status(200).send('the new critere was successfully register')
+            return res.status(200).send('the new critere was successfully register')
         } catch (err) {
-            res.status(400).send('Error : ' + err)
+            return res.status(400).send('Error : ' + err)
         }
     })()
 }

@@ -4,6 +4,7 @@ import {
     getAllCritereProcess,
     getAllCriteresByProcess,
     getAllTypesCriteres,
+    getAllCritProcessRelation,
     postTypesCriteres,
     postProcess,
     postCriteres
@@ -22,6 +23,12 @@ router.get('/', getCriteres);
  Donne la liste de tous les process qu'un critère peut avoir
  **/
 router.get('/process', getAllCritereProcess);
+
+/**
+ GET uri/criteres/process/relation
+ Donne la liste de tous les relation entre un process et les critères
+ **/
+router.get('/process/relation', getAllCritProcessRelation);
 
 /**
  GET uri/criteres/process/{idProcess}
