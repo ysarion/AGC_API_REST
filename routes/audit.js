@@ -1,5 +1,12 @@
 import express from 'express';
-import {getAudits, getAudit, getObjectifAnnuel, postAudit,postObjectifAnnuel} from '../controllers/auditController.js'
+import {
+    getAudits,
+    getAudit,
+    getObjectifAnnuel,
+    postAudit,
+    postObjectifAnnuel,
+    getAllObjectifAnnuel
+} from '../controllers/auditController.js'
 
 const router = express.Router();
 
@@ -8,6 +15,12 @@ const router = express.Router();
  * Consulter un l'objectif annuel fixé
  */
 router.get('/objectif', getObjectifAnnuel);
+
+/**
+ * GET uri/audit/objectif/all
+ * Consulter tous les objectifs
+ */
+router.get('/objectif/all', getAllObjectifAnnuel);
 
 /**
  * GET uri/audit

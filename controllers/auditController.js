@@ -65,6 +65,24 @@ export const getObjectifAnnuel = (req, res) => {
 }
 
 /**
+ * function use to ALL objectifs
+ * @param req
+ * @param res
+ */
+export const getAllObjectifAnnuel = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from ObjectifsAnnuel')
+            return res.status(200).send(result.recordset)
+
+        } catch (err) {
+            return res.status(400).send('erreur : ' + err);
+        }
+    })()
+}
+
+/**
  * Function use to insert an audit in database
  * @param req
  * @param res
