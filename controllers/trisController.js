@@ -204,7 +204,8 @@ export const postTri = (req, res) => {
  */
 export const postTypesTris = (req,res) => {
     let typeTry = joi.object({
-        typeTriNom: joi.string().min(3).max(60).required()
+        typeTriNom: joi.string().min(3).max(60).required(),
+        typeTriId: joi.number().integer().allow(null)
     })
     let requestValidation = typeTry.validate(req.body);
     if(requestValidation.error){
