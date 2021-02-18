@@ -167,7 +167,7 @@ export const postTri = (req, res) => {
                     '@fk_user,' +
                     '@fk_article)')
         } catch (e) {
-            res.status(500).send("erreur : " + e);
+            return res.status(500).send("erreur : " + e);
         }
     })();
     /*
@@ -189,9 +189,9 @@ export const postTri = (req, res) => {
                     .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
                     .query('INSERT INTO Tris_Criteres (FK_triId,FK_critereId,valueCritere) VALUES (@FK_triId,@FK_critereId,@valueCritere)')
             }
-            res.status(200).send('insert OK')
+            return res.status(200).send('The "tri" was successfully register')
         } catch (err) {
-            res.status(400).send('Error : ' + err)
+            return res.status(400).send('Error : ' + err)
         }
     })()
 }

@@ -86,6 +86,7 @@ export const getUser = (req, res) => {
  */
 export const postUser = (req, res) => {
     let userSchema = Joi.object({
+        idUser: Joi.number().integer().allow(null),
         mail: Joi.string().email().allow(null).required(),
         nom: Joi.string().required(),
         prenom: Joi.string().required(),
@@ -134,7 +135,8 @@ export const postUser = (req, res) => {
 }
 export const postEquipe = (req, res) => {
     let equipe = Joi.object({
-        equipe: Joi.string().min(1).required()
+        equipe: Joi.string().min(1).required(),
+        equipeId: Joi.number().integer().allow(null)
     })
     let requestValidation = equipe.validate(req.body)
     if(requestValidation.error){
@@ -153,5 +155,3 @@ export const postEquipe = (req, res) => {
         }
     })();
 }
-//@todo post Role
-//@todo PUT METHOD for USER
