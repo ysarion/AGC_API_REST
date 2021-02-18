@@ -233,7 +233,9 @@ export const postTypesTris = (req,res) => {
  */
 export const postLieuAVO = (req,res) => {
     let lieuAVO = joi.object({
-        nomLieu: joi.string().min(3).max(30).required()
+        nomLieu: joi.string().min(3).max(30).required(),
+        lieuAvoId: joi.number().integer().allow(null),
+        fk_typeTri_AVO: joi.number().integer()
     })
     let requestValidation = lieuAVO.validate(req.body)
     if(requestValidation.error){
