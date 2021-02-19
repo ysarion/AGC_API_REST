@@ -172,26 +172,58 @@ export const postAudit = (req, res) => {
  */
 export const postObjectifAnnuel = (req, res) => {
     let objectif = joi.object({
+        objectifId: joi.number().integer().allow(null),
         objectif: joi.number().integer().required(),
         actif: joi.boolean().required()
     });
     let requestValidation = objectif.validate(req.body)
     if (requestValidation.error) {
-        return res.status(400).send("Error : " + requestValidation.error.details[0].message)
+        return res.status(400).send(" validation Error : " + requestValidation.error.details[0].message)
     }
-    (async function () {
-        try {
-            let pool = await sql.connect(config)
-            const request = pool.request();
-            request
-                .input('objectif', sql.VarChar, req.body.objectif)
-                .input('objectif', sql.Boolean, req.body.actif)
-                .query('INSERT INTO ObjectifsAnnuel (objectif,actif) values (@objectif,@actif)');
-            return res.status(200).send("The new \"objectif\" was succesfully register")
-        } catch (e) {
-            return res.status(500).send("erreur : " + e);
+    if (req.body.actif) {
+        (async function () {
+            try {
+                let pool = await sql.connect(config)
+                const request = pool.request();
+                request
+                    .query('Update ObjectifsAnnuel set actif=0 where actif=1');
+                //return res.status(200).send("The new \"objectif\" was succesfully register")
+            } catch (e) {
+                return res.status(400).send("SQL erreur lors de l'update : " + e);
+            }
+        })().then()
+        {
+            (async function () {
+                try {
+                    let pool = await sql.connect(config)
+                    const update = pool.request();
+                    update
+                        .input('objectif', sql.VarChar, req.body.objectif)
+                        .input('actif', sql.Bit, req.body.actif)
+                        .query('INSERT INTO ObjectifsAnnuel (objectif,actif) values (@objectif,@actif)');
+                    return res.status(200).send("The new \"objectif\" was succesfully register")
+                } catch (e) {
+                    return res.status(400).send("SQL erreur insert new val : " + e);
+                }
+            })();
+
         }
-    })();
+    } else {
+        (async function () {
+            try {
+                let pool = await sql.connect(config)
+                const insert = pool.request();
+                insert
+                    .input('objectif', sql.VarChar, req.body.objectif)
+                    .input('actif', sql.Bit, req.body.actif)
+                    .query('INSERT INTO ObjectifsAnnuel (objectif,actif) values (@objectif,@actif)');
+                return res.status(200).send("The new \"objectif\" was succesfully register")
+            } catch (e) {
+                return res.status(400).send("SQL erreur insert new val: " + e);
+            }
+        })();
+
+    }
 }
 /*
 @   todo Create update route & function
