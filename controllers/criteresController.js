@@ -67,21 +67,17 @@ export const getAllCritProcessRelation = (req, res) => {
 
 //@todo PUT METHODE FOR CRITERES / TYPE CRITERE / Process
 export const postCriteres = (req, res) => {
-    let listProcess = Joi.object({
-        Fk_processId: Joi.number().integer().required()
-    })
     let critere = Joi.object({
+        critereId: Joi.number().integer().allow(null),
         nomCritere: Joi.string().min(3).max(100).required(),
         typeObservation: Joi.string().allow(null).required(),
         infoDemerite: Joi.string().allow(null).required(),
-        FK_typeCriteres: Joi.number().integer().required(),
-        listProcess: Joi.array().items(listProcess.required()).required()
+        FK_TypeCriteres: Joi.number().integer().required(),
+        listProcess: Joi.array().items(Joi.number().integer()).required()
     })
     const schemaValidation = critere.validate(req.body);
-    const schemaValidation2 = listProcess.validate(req.body.listProcess)
     if (schemaValidation.error) {
-        if (schemaValidation2.error) return res.status(400).send("error : " + schemaValidation2.error.details[0].message + " json object  : {FK_processId: int}")
-        return res.status(400).send("error : " + schemaValidation.error.details[0].messages)
+        return res.status(400).send("Critere validation error : " + schemaValidation.error.details[0].messages)
     }
     // Si le schéma correspond, on peut faire l'insert du critere :
     (async function () {
@@ -92,36 +88,40 @@ export const postCriteres = (req, res) => {
                 .input('nomCritere', sql.VarChar, req.body.nomCritere)
                 .input('typeObservation', sql.VarChar, req.body.typeObservation)
                 .input('infoDemerite', sql.VarChar, req.body.infoDemerite)
-                .input('FK_typeCriteres', sql.VarChar, req.body.FK_typeCriteres)
-                .query('INSERT INTO Criteres (nomCritere,typeObservation,infoDemerite,FK_typeCriteres) values (@nomCritere,@typeObservation,@infoDemerite,@FK_typeCriteres)');
+                .input('FK_typeCriteres', sql.VarChar, req.body.FK_TypeCriteres)
+                .query('INSERT INTO Criteres (nomCritere,typeObservation,infoDemerite,FK_typeCriteres) values (@nomCritere,@typeObservation,@infoDemerite,@FK_TypeCriteres)');
         } catch (e) {
-            return res.status(500).send("erreur : " + e);
+            return res.status(500).send("Insert du critère erreur : " + e);
         }
-    })();
-    // On doit lié le critère à un ou plusieurs process
-    (async () => {
-        try {
-            await sql.connect(config)
-            let result = await sql.query('SELECT TOP 1 critereId FROM Criteres ORDER BY critereId DESC');
-            const critereId = result.recordset[0].critereId;
-            //on boucle l'insert de critères
-            for (let i = 0; i < req.body.listProcess.length; i++) {
-                let pool = await sql.connect(config)
-                const request = pool.request();
-                request.input('FK_critereId', sql.Int, parseInt(critereId))
-                    .input('FK_processId', sql.Int, parseInt(req.body.listProcess[i].Fk_processId))
-                    .query('INSERT INTO Criteres_Process (FK_critereId,FK_processId) VALUES (@FK_critereId,@FK_processId)')
+    })().then()
+    {
+        // On doit lié le critère à un ou plusieurs process
+        (async () => {
+            try {
+                await sql.connect(config)
+                let result = await sql.query('SELECT TOP 1 critereId FROM Criteres ORDER BY critereId DESC');
+                const critereId = result.recordset[0].critereId;
+                //on boucle l'insert de critères
+                for (let i = 0; i < req.body.listProcess.length; i++) {
+                    let pool = await sql.connect(config)
+                    const request = pool.request();
+                    request.input('FK_critereId', sql.Int, parseInt(critereId))
+                        .input('FK_processId', sql.Int, parseInt(req.body.listProcess[i]))
+                        .query('INSERT INTO Criteres_Process (FK_critereId,FK_processId) VALUES (@FK_critereId,@FK_processId)')
+                }
+                return res.status(200).send('the new critere was successfully register')
+            } catch (err) {
+                return res.status(400).send('Inscription des process Error : ' + err)
             }
-            return res.status(200).send('the new critere was successfully register')
-        } catch (err) {
-            return res.status(400).send('Error : ' + err)
-        }
-    })()
+        })()
+    }
+
 }
 
 export const postTypesCriteres = (req, res) => {
     let typeCriteres = Joi.object({
-        type: Joi.string().min(3).required()
+        type: Joi.string().min(3).required(),
+        typeCritereId: Joi.number().integer().allow(null)
     })
     const schemaValidation = typeCriteres.validate(req.body);
     if (schemaValidation.error) {
@@ -145,7 +145,8 @@ export const postTypesCriteres = (req, res) => {
 
 export const postProcess = (req, res) => {
     let process = Joi.object({
-        nomProcess: Joi.string().min(3).max(40).required()
+        nomProcess: Joi.string().min(3).max(40).required(),
+        processId: Joi.number().integer().allow(null)
     })
     const schemaValidation = process.validate(req.body);
     if (schemaValidation.error) {

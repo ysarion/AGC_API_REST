@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5a08524c-11a3-4bdc-8e89-c382c95cbcd2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/trisController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/trisController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/criteresController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/criteresController.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +47,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../application-test" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="Docker" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.2.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -122,7 +122,8 @@
       <workItem from="1613453853504" duration="2958000" />
       <workItem from="1613548762283" duration="6559000" />
       <workItem from="1613635042121" duration="3007000" />
-      <workItem from="1613656135058" duration="2109000" />
+      <workItem from="1613656135058" duration="5618000" />
+      <workItem from="1613722831282" duration="7238000" />
     </task>
     <servers />
   </component>
