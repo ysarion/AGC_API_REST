@@ -106,6 +106,7 @@ export const getArticleByCode = (req, res) => {
  */
 export const postModele = (req, res) => {
     let modele = joi.object({
+        modeleId: joi.number().integer().allow(null),
         modele: joi.string().min(3).max(60).required()
     })
     let requestValidation = modele.validate(req.body)
@@ -134,6 +135,7 @@ export const postModele = (req, res) => {
  */
 export const postArticle = (req, res) => {
     let article = joi.object({
+        articleId: joi.number().integer().allow(null),
         codeArticle: joi.number().integer().required(),
         fk_model: joi.number().integer().required(),
         descriptionSAP: joi.string().min(6).max(100).required(),

@@ -136,32 +136,35 @@ export const postAudit = (req, res) => {
         } catch (e) {
             return res.status(500).send("erreur : " + e);
         }
-    })();
-    /*
+    })().then()
+    {
+        /*
         ENREGISTREMENT DES CRITERES LIES A L AUDIT
         Pour avoir le dernier enregistrement on doit recupérer l'id de l'audit créé :
      */
-    (async () => {
-        try {
-            await sql.connect(config)
-            let result = await sql.query('SELECT TOP 1 auditId FROM Audits ORDER BY auditId DESC');
-            console.log("L'id de l'audit inseré est de : " + result.recordset[0].auditId)
-            const auditId = result.recordset[0].auditId;
-            //on boucle l'insert de critères
-            let pool = await sql.connect(config)
-            for (let i = 0; i < req.body.criteres.length; i++) {
-                const request = pool.request();
-                request.input('FK_auditId', sql.Int, parseInt(auditId))
-                    .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
-                    .input('observation', sql.VarChar, req.body.criteres[i].observation)
-                    .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
-                    .query('INSERT INTO Audit_Criteres (FK_auditId,FK_critereId,observation,valueCritere) VALUES (@FK_auditId,@FK_critereId,@observation,@valueCritere)')
+        (async () => {
+            try {
+                await sql.connect(config)
+                let result = await sql.query('SELECT TOP 1 auditId FROM Audits ORDER BY auditId DESC');
+                console.log("L'id de l'audit inseré est de : " + result.recordset[0].auditId)
+                const auditId = result.recordset[0].auditId;
+                //on boucle l'insert de critères
+                let pool = await sql.connect(config)
+                for (let i = 0; i < req.body.criteres.length; i++) {
+                    const request = pool.request();
+                    request.input('FK_auditId', sql.Int, parseInt(auditId))
+                        .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
+                        .input('observation', sql.VarChar, req.body.criteres[i].observation)
+                        .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
+                        .query('INSERT INTO Audit_Criteres (FK_auditId,FK_critereId,observation,valueCritere) VALUES (@FK_auditId,@FK_critereId,@observation,@valueCritere)')
+                }
+                return res.status(200).send('The audit was successfully register')
+            } catch (err) {
+                return res.status(400).send('Error : ' + err)
             }
-            return res.status(200).send('The audit was successfully register')
-        } catch (err) {
-            return res.status(400).send('Error : ' + err)
-        }
-    })()
+        })()
+    }
+
 }
 
 /**
@@ -217,7 +220,7 @@ export const postObjectifAnnuel = (req, res) => {
                     .input('objectif', sql.VarChar, req.body.objectif)
                     .input('actif', sql.Bit, req.body.actif)
                     .query('INSERT INTO ObjectifsAnnuel (objectif,actif) values (@objectif,@actif)');
-                return res.status(200).send("The new \"objectif\" was succesfully register")
+                return res.status(200).send("The new objectif was succesfully register")
             } catch (e) {
                 return res.status(400).send("SQL erreur insert new val: " + e);
             }

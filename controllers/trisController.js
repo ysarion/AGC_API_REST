@@ -169,31 +169,34 @@ export const postTri = (req, res) => {
         } catch (e) {
             return res.status(500).send("erreur : " + e);
         }
-    })();
-    /*
-        ENREGISTREMENT DES CRITERES LIES AU TRI
-        Pour avoir le dernier enregistrement on doit recupérer l'id du tri créé :
-     */
-    (async () => {
-        try {
-            await sql.connect(config)
-            let result = await sql.query('SELECT TOP 1 triId FROM Tris ORDER BY triId DESC');
-            //console.log("L'id du tri inseré est de : "+result.recordset[0].auditId)
-            const triId = result.recordset[0].triId;
-            //on boucle l'insert de critères
-            for (let i = 0; i < req.body.criteres.length; i++) {
-                let pool = await sql.connect(config)
-                const request = pool.request();
-                request.input('FK_triId', sql.Int, parseInt(triId))
-                    .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
-                    .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
-                    .query('INSERT INTO Tris_Criteres (FK_triId,FK_critereId,valueCritere) VALUES (@FK_triId,@FK_critereId,@valueCritere)')
+    })().then()
+    {
+        /*
+       ENREGISTREMENT DES CRITERES LIES AU TRI
+       Pour avoir le dernier enregistrement on doit recupérer l'id du tri créé :
+    */
+        (async () => {
+            try {
+                await sql.connect(config)
+                let result = await sql.query('SELECT TOP 1 triId FROM Tris ORDER BY triId DESC');
+                //console.log("L'id du tri inseré est de : "+result.recordset[0].auditId)
+                const triId = result.recordset[0].triId;
+                //on boucle l'insert de critères
+                for (let i = 0; i < req.body.criteres.length; i++) {
+                    let pool = await sql.connect(config)
+                    const request = pool.request();
+                    request.input('FK_triId', sql.Int, parseInt(triId))
+                        .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
+                        .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
+                        .query('INSERT INTO Tris_Criteres (FK_triId,FK_critereId,valueCritere) VALUES (@FK_triId,@FK_critereId,@valueCritere)')
+                }
+                return res.status(200).send('The "tri" was successfully register')
+            } catch (err) {
+                return res.status(400).send('Error : ' + err)
             }
-            return res.status(200).send('The "tri" was successfully register')
-        } catch (err) {
-            return res.status(400).send('Error : ' + err)
-        }
-    })()
+        })()
+    }
+
 }
 
 /**
@@ -202,13 +205,13 @@ export const postTri = (req, res) => {
  * @param res
  * @returns {this}
  */
-export const postTypesTris = (req,res) => {
+export const postTypesTris = (req, res) => {
     let typeTry = joi.object({
         typeTriNom: joi.string().min(3).max(60).required(),
         typeTriId: joi.number().integer().allow(null)
     })
     let requestValidation = typeTry.validate(req.body);
-    if(requestValidation.error){
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     (async function () {
@@ -218,7 +221,7 @@ export const postTypesTris = (req,res) => {
             request
                 .input('typeTriNom', sql.VarChar(80), req.body.typeTriNom)
                 .query('INSERT INTO TypesTris (typeTriNom) values (@typeTriNom);')
-           return res.status(200).send("TypeTriNom was successfully register")
+            return res.status(200).send("TypeTriNom was successfully register")
         } catch (e) {
             return res.status(500).send("erreur : " + e);
         }
@@ -231,14 +234,14 @@ export const postTypesTris = (req,res) => {
  * @param res
  * @returns {this}
  */
-export const postLieuAVO = (req,res) => {
+export const postLieuAVO = (req, res) => {
     let lieuAVO = joi.object({
         nomLieu: joi.string().min(3).max(30).required(),
         lieuAvoId: joi.number().integer().allow(null),
         fk_typeTri_AVO: joi.number().integer()
     })
     let requestValidation = lieuAVO.validate(req.body)
-    if(requestValidation.error){
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     (async function () {
