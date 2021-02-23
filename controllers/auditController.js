@@ -33,10 +33,35 @@ export const getAudit = (req, res) => {
             let result = await sql.query('select * from Audits where auditId = ' + param)
             if (result.recordset[0] === undefined) res.status(400).send("Audit with the given id is not in database")
             else {
-                let SearchForCrit = await sql.query('select * from Audit_Criteres where FK_auditId = ' + param)
-                let arrayToSend = result.recordset[0];
-                arrayToSend['criteres'] = SearchForCrit.recordset
-                return res.status(200).send(arrayToSend)
+                let idUser = result.recordset[0].fk_user;
+                let idArticle = result.recordset[0].fk_article;
+                console.log(result.recordset[0]);
+                let idObjectif = result.recordset[0].fk_objectifAnnuel;
+                let SearchForUser = await sql.query('select * from Users where idUser = ' + idUser);
+                let SearchForArticle = await sql.query('select * from Articles where articleId = ' + idArticle);
+                let SearchForObjectif = await sql.query('select * from ObjectifsAnnuel where objectifId = ' + idObjectif);
+                let SearchForCrit = await sql.query('select * from Audit_Criteres \n' +
+                    'left join Criteres on Audit_Criteres.FK_critereId = Criteres.critereId \n' +
+                    'where Audit_Criteres.FK_auditId =' + param)
+                let jsonToSend = {
+                    auditId: result.recordset[0].auditId,
+                    four: result.recordset[0].four,
+                    numContainer: result.recordset[0].numContainer,
+                    totalVerre: result.recordset[0].totalVerres,
+                    pourcentageResultat: result.recordset[0].pourcentageResultat,
+                    rating: result.recordset[0].rating,
+                    commentaireGeneral: result.recordset[0].commentaireGeneral,
+                    action : result.recordset[0].action,
+                    dateDeb : result.recordset[0].dateDeb,
+                    dateFin: result.recordset[0].dateFin,
+                    objectif: SearchForObjectif.recordset[0],
+                    User: SearchForUser.recordset[0],
+                    Article: SearchForArticle.recordset[0],
+                    Criteres: SearchForCrit.recordset
+
+
+                };
+                return res.status(200).send(jsonToSend)
             }
         } catch (err) {
             return res.status(400).send('erreur : ' + err);
