@@ -169,8 +169,7 @@ export const postTri = (req, res) => {
         } catch (e) {
             return res.status(500).send("erreur : " + e);
         }
-    })().then()
-    {
+    })().then(
         /*
        ENREGISTREMENT DES CRITERES LIES AU TRI
        Pour avoir le dernier enregistrement on doit recupérer l'id du tri créé :
@@ -195,8 +194,7 @@ export const postTri = (req, res) => {
                 return res.status(400).send('Error : ' + err)
             }
         })()
-    }
-
+    )
 }
 
 /**

@@ -37,7 +37,6 @@ export const getEquipes = (req, res) => {
             return res.status(400).send('erreur : ' + e);
         }
     })()
-
 }
 
 /**

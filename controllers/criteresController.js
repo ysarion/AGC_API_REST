@@ -93,8 +93,7 @@ export const postCriteres = (req, res) => {
         } catch (e) {
             return res.status(500).send("Insert du critère erreur : " + e);
         }
-    })().then()
-    {
+    })().then(
         // On doit lié le critère à un ou plusieurs process
         (async () => {
             try {
@@ -114,8 +113,7 @@ export const postCriteres = (req, res) => {
                 return res.status(400).send('Inscription des process Error : ' + err)
             }
         })()
-    }
-
+    )
 }
 
 export const postTypesCriteres = (req, res) => {
@@ -166,5 +164,4 @@ export const postProcess = (req, res) => {
             res.status(500).send("erreur : " + e);
         }
     })();
-
 }

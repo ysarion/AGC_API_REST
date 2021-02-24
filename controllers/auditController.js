@@ -51,8 +51,8 @@ export const getAudit = (req, res) => {
                     pourcentageResultat: result.recordset[0].pourcentageResultat,
                     rating: result.recordset[0].rating,
                     commentaireGeneral: result.recordset[0].commentaireGeneral,
-                    action : result.recordset[0].action,
-                    dateDeb : result.recordset[0].dateDeb,
+                    action: result.recordset[0].action,
+                    dateDeb: result.recordset[0].dateDeb,
                     dateFin: result.recordset[0].dateFin,
                     objectif: SearchForObjectif.recordset[0],
                     User: SearchForUser.recordset[0],
@@ -162,7 +162,6 @@ export const postAudit = (req, res) => {
             return res.status(500).send("erreur : " + e);
         }
     })().then(
-
         /*
         ENREGISTREMENT DES CRITERES LIES A L AUDIT
         Pour avoir le dernier enregistrement on doit recupérer l'id de l'audit créé :
@@ -218,8 +217,7 @@ export const postObjectifAnnuel = (req, res) => {
             } catch (e) {
                 return res.status(400).send("SQL erreur lors de l'update : " + e);
             }
-        })().then()
-        {
+        })().then(
             (async function () {
                 try {
                     let pool = await sql.connect(config)
@@ -232,9 +230,8 @@ export const postObjectifAnnuel = (req, res) => {
                 } catch (e) {
                     return res.status(400).send("SQL erreur insert new val : " + e);
                 }
-            })();
-
-        }
+            })()
+        )
     } else {
         (async function () {
             try {
