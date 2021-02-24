@@ -2,7 +2,7 @@ version: "3.7"
 services:
   sql-server:
     container_name: sql-server-db
-    image: mcr.microsoft.com/mssql/server:2017-latest
+    image: ysarion/agc_api:v2
     ports:
     - "1433:1433"
     environment:

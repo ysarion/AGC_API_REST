@@ -161,8 +161,8 @@ export const postAudit = (req, res) => {
         } catch (e) {
             return res.status(500).send("erreur : " + e);
         }
-    })().then()
-    {
+    })().then(
+
         /*
         ENREGISTREMENT DES CRITERES LIES A L AUDIT
         Pour avoir le dernier enregistrement on doit recupérer l'id de l'audit créé :
@@ -188,8 +188,7 @@ export const postAudit = (req, res) => {
                 return res.status(400).send('Error : ' + err)
             }
         })()
-    }
-
+    )
 }
 
 /**
