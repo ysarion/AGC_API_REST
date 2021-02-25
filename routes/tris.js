@@ -1,5 +1,16 @@
 import express from 'express';
-import {getTris,getTri,postTri,getTypesTris,getTrisCriteres, getLieuxAVO, postTypesTris,postLieuAVO} from '../controllers/trisController.js'
+import {
+    getTris,
+    getTri,
+    postTri,
+    getTypesTris,
+    getTrisCriteres,
+    getLieuxAVO,
+    getMarket,
+    postTypesTris,
+    postLieuAVO
+} from '../controllers/trisController.js'
+
 const router = express.Router();
 
 /**
@@ -25,6 +36,12 @@ router.get('/typesTris/AVO/Lieux', getLieuxAVO);
  * Récupérer la liste de tout les tris
  */
 router.get('/criteres', getTrisCriteres);
+
+/**
+ * GET uri/tris/market
+ * Consulter un tri
+ */
+router.get('/market', getMarket);
 
 /**
  * GET uri/tris/:id

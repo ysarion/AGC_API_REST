@@ -13,6 +13,17 @@ export const getCrashQualites = (req, res) => {
         }
     })()
 }
+export const getCrashQualite = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('SELECT * FROM CrashQualite where crashQualiteId='+req.params['id'])
+            return res.status(200).send(result.recordset);
+        } catch (e) {
+            return res.status(400).send('erreur' + e);
+        }
+    })()
+}
 
 export const getZones = (req, res) => {
     (async () => {

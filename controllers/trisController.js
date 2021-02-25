@@ -58,6 +58,24 @@ export const getLieuxAVO = (req, res) => {
 }
 
 /**
+ * function use to get all market
+ * @param req
+ * @param res
+ */
+export const getMarket = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('select * from Market')
+            res.status(200).send(result.recordset);
+        } catch (err) {
+            console.log(err);
+            res.status(400).send('erreur : ' + err);
+        }
+    })()
+}
+
+/**
  * function use to get all critere that a tri use
  * @param req
  * @param res
