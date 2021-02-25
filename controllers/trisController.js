@@ -126,8 +126,7 @@ export const postTri = (req, res) => {
     })
     const schemaValidation = triObjectSchema.validate(req.body);
     if (schemaValidation.error) {
-        res.status(400).send("error : " + schemaValidation.error.details[0].message)
-        return
+        return res.status(400).send("error : " + schemaValidation.error.details[0].message)
     }
     // Si le schéma correspond, on peut faire l'insert :
     (async function () {

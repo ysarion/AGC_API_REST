@@ -50,7 +50,6 @@ export const getAllTypesCriteres = (req, res) => {
             return res.status(400).send('erreur' + e);
         }
     })()
-
 }
 
 export const getAllCritProcessRelation = (req, res) => {
