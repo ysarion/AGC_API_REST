@@ -22,9 +22,6 @@
     <list default="true" id="5a08524c-11a3-4bdc-8e89-c382c95cbcd2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/crashQualiteController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/crashQualiteController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/criteresController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/criteresController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/trisController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/trisController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/crashQualite.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/crashQualite.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +131,7 @@
       <workItem from="1614160871975" duration="3874000" />
       <workItem from="1614175878732" duration="1373000" />
       <workItem from="1614177278348" duration="12460000" />
-      <workItem from="1614244972953" duration="3728000" />
+      <workItem from="1614244972953" duration="4479000" />
     </task>
     <servers />
   </component>
