@@ -18,7 +18,26 @@ export const getCrashQualite = (req, res) => {
         try {
             await sql.connect(config)
             let result = await sql.query('SELECT * FROM CrashQualite where crashQualiteId='+req.params['id'])
-            return res.status(200).send(result.recordset);
+            let idArticle = result.recordset[0].fk_article;
+            let idUser = result.recordset[0].fk_user;
+            let SearchForUser = await sql.query(
+                  "select * from Users where idUser = " + idUser
+                );
+            let SearchForArticle = await sql.query(
+                "select * from Articles left join Modeles on Articles.fk_model = Modeles.modeleId where articleId = " +
+                idArticle
+            );                        
+            const jsonToSend = {
+              crashQualiteId: result.recordset[0].crashQualiteId,
+              nbPieces: result.recordset[0].nbPieces,
+              description: result.recordset[0].description,
+              piecesJointes: result.recordset[0].piecesJointes,
+              dateCrash: result.recordset[0].dateCrash,
+              statut: result.recordset[0].status,
+              user: SearchForUser.recordset[0],
+              article: SearchForArticle.recordset[0],
+            };
+            return res.status(200).send(jsonToSend);
         } catch (e) {
             return res.status(400).send('erreur' + e);
         }
