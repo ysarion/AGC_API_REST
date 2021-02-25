@@ -35,13 +35,13 @@ export const getAudit = (req, res) => {
             else {
                 let idUser = result.recordset[0].fk_user;
                 let idArticle = result.recordset[0].fk_article;
-                console.log(result.recordset[0]);
                 let idObjectif = result.recordset[0].fk_objectifAnnuel;
                 let SearchForUser = await sql.query('select * from Users where idUser = ' + idUser);
                 let SearchForArticle = await sql.query('select * from Articles where articleId = ' + idArticle);
                 let SearchForObjectif = await sql.query('select * from ObjectifsAnnuel where objectifId = ' + idObjectif);
-                let SearchForCrit = await sql.query('select * from Audit_Criteres \n' +
+                let SearchForCrit = await sql.query('select critereId,nomCritere,valueCritere,observation,FK_TypeCriteres,type from Audit_Criteres \n' +
                     'left join Criteres on Audit_Criteres.FK_critereId = Criteres.critereId \n' +
+                    'left join TypesCriteres on Criteres.FK_TypeCriteres = TypesCriteres.typeCritereId \n' +
                     'where Audit_Criteres.FK_auditId =' + param)
                 let jsonToSend = {
                     auditId: result.recordset[0].auditId,
@@ -58,8 +58,6 @@ export const getAudit = (req, res) => {
                     User: SearchForUser.recordset[0],
                     Article: SearchForArticle.recordset[0],
                     Criteres: SearchForCrit.recordset
-
-
                 };
                 return res.status(200).send(jsonToSend)
             }

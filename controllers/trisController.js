@@ -134,6 +134,7 @@ export const postTri = (req, res) => {
         fk_user: joi.number().integer().required(),
         fk_articles: joi.number().integer().required(),
         fk_typeTris: joi.number().integer().required(),
+        fk_LieuAVO: joi.number().integer().allow(null).required(),
         numGallia: joi.number().integer().required(),
         numOS: joi.number().integer().required(),
         nbPieces: joi.number().integer().required(),
@@ -154,6 +155,7 @@ export const postTri = (req, res) => {
             request
                 .input('fk_user', sql.Int, parseInt(req.body.fk_user))
                 .input('fk_typeTris', sql.Int, parseInt(req.body.fk_typeTris))
+                .input('fk_LieuAVO', sql.Int, parseInt(req.body.fk_LieuAVO))
                 .input('fk_market', sql.Int, parseInt(req.body.fk_typeTris))
                 .input('fk_article', sql.Int, parseInt(req.body.fk_articles))
                 .input('numGallia', sql.Int, parseInt(req.body.numGallia))
@@ -169,6 +171,7 @@ export const postTri = (req, res) => {
                     'dateDebut,' +
                     'dateFin,' +
                     'fk_typeTri,' +
+                    'fk_LieuAVO,' +
                     'fk_market,' +
                     'fk_user,' +
                     'fk_article) ' +
@@ -180,6 +183,7 @@ export const postTri = (req, res) => {
                     '@dateDeb,' +
                     'GETDATE(),' +
                     '@fk_typeTris,' +
+                    '@fk_LieuAVO,' +
                     '@fk_market,' +
                     '@fk_user,' +
                     '@fk_article)')
