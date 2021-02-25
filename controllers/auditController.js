@@ -37,7 +37,7 @@ export const getAudit = (req, res) => {
                 let idArticle = result.recordset[0].fk_article;
                 let idObjectif = result.recordset[0].fk_objectifAnnuel;
                 let SearchForUser = await sql.query('select * from Users where idUser = ' + idUser);
-                let SearchForArticle = await sql.query('select * from Articles where articleId = ' + idArticle);
+                let SearchForArticle = await sql.query('select * from Articles left join Modeles on Articles.fk_model = Modeles.modeleId where articleId = ' + idArticle);
                 let SearchForObjectif = await sql.query('select * from ObjectifsAnnuel where objectifId = ' + idObjectif);
                 let SearchForCrit = await sql.query('select critereId,typeObservation,infoDemerite,nomCritere,valueCritere,observation,FK_TypeCriteres,type from Audit_Criteres \n' +
                     'left join Criteres on Audit_Criteres.FK_critereId = Criteres.critereId \n' +
@@ -55,9 +55,9 @@ export const getAudit = (req, res) => {
                     dateDeb: result.recordset[0].dateDeb,
                     dateFin: result.recordset[0].dateFin,
                     objectif: SearchForObjectif.recordset[0],
-                    User: SearchForUser.recordset[0],
-                    Article: SearchForArticle.recordset[0],
-                    Criteres: SearchForCrit.recordset
+                    user: SearchForUser.recordset[0],
+                    article: SearchForArticle.recordset[0],
+                    criteres: SearchForCrit.recordset
                 };
                 return res.status(200).send(jsonToSend)
             }
