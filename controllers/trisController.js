@@ -140,7 +140,7 @@ export const postTri = (req, res) => {
         nbPieces: joi.number().integer().required(),
         commentaire: joi.string().optional().allow(null),
         dateDeb: joi.date().required(),
-        dateFin: joi.date(),
+        dateFin: joi.date().required(),
         criteres: joi.array().items(criteresTri).required()
     })
     const schemaValidation = triObjectSchema.validate(req.body);
@@ -158,6 +158,7 @@ export const postTri = (req, res) => {
             .input('numOS', sql.Int, parseInt(req.body.numOS))
             .input('commentaire', sql.VarChar(100), req.body.commentaire)
             .input('dateDeb', sql.DateTime, req.body.dateDeb)
+            .input('dateFin', sql.DateTime, req.body.dateFin)
             .output("id", sql.Int)
             .query('INSERT INTO Tris (' +
                 'numGallia,' +
@@ -177,7 +178,7 @@ export const postTri = (req, res) => {
                 '@numOS,' +
                 '@commentaire,' +
                 '@dateDeb,' +
-                'GETDATE(),' +
+                '@dateFin,' +
                 '@fk_typeTris,' +
                 '@fk_LieuAVO,' +
                 '@fk_market,' +
