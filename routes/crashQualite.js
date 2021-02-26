@@ -8,7 +8,7 @@ import {
     getLignesByZones,
     getMachines,
     getMachinesByLignes,
-    postCrashQualite, postAnalyseCrash
+    postCrashQualite, postAnalyseCrash, getAnalyseCrash
 } from '../controllers/crashQualiteController.js';
 
 const router = express.Router();
@@ -24,6 +24,12 @@ router.get('/', getCrashQualites);
  * Récupérer la liste de toutes les analyses de crash qualités
  */
 router.get('/analysesCrash', getAnalysesCrash);
+
+/**
+ * GET uri/crashQualites/analyseCrash/id
+ * Récupérer l'analyse d'un crash qualités
+ */
+router.get('/analysesCrash/:id', getAnalyseCrash);
 
 /**
  * GET uri/crashQualites/zones

@@ -24,6 +24,37 @@ export const getAnalysesCrash = (req, res) => {
         }
     })()
 }
+export const getAnalyseCrash = (req, res) => {
+    (async () => {
+        try {
+            let idCrash = req.params['id'];
+            await sql.connect(config)
+            let result = await sql.query('SELECT * FROM AnalyseCrash where fk_crashQualite ='+idCrash)
+
+            let SearchForOriginCrash = await sql.query(
+                "select OrigineCrash.fk_ligne,ligne,OrigineCrash.fk_machine,machine,OrigineCrash.fk_analyseCrash from OrigineCrash " +
+                "left join Lignes on Lignes.ligneId = OrigineCrash.fk_ligne " +
+                "left join Machines on Machines.machineId = OrigineCrash.fk_machine " +
+                "where fk_analyseCrash = " + result.recordset[0].analyseCrashId
+            );
+            let jsonToSend = {
+                analyseCrashId: result.recordset[0].analyseCrashId,
+                decision: result.recordset[0].decision,
+                piecesJointes: result.recordset[0].piecesJointes,
+                fk_crashQualite: result.recordset[0].fk_crashQualite,
+                origineCrash: {
+                    ligneId: SearchForOriginCrash.recordset[0].fk_ligne,
+                    ligne: SearchForOriginCrash.recordset[0].ligne,
+                    machineId: SearchForOriginCrash.recordset[0].fk_machine,
+                    machine: SearchForOriginCrash.recordset[0].machine,
+                }
+            }
+            return res.status(200).send(jsonToSend);
+        } catch (e) {
+            return res.status(400).send('erreur' + e);
+        }
+    })()
+}
 export const getCrashQualite = (req, res) => {
     (async () => {
         try {
