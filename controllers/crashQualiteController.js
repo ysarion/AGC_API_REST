@@ -17,25 +17,38 @@ export const getCrashQualite = (req, res) => {
     (async () => {
         try {
             await sql.connect(config)
-            let result = await sql.query('SELECT * FROM CrashQualite where crashQualiteId='+req.params['id'])
+            let idCrash = req.params['id'];
+            let result = await sql.query('SELECT * FROM CrashQualite where crashQualiteId=' + idCrash)
             let idArticle = result.recordset[0].fk_article;
             let idUser = result.recordset[0].fk_user;
             let SearchForUser = await sql.query(
-                  "select * from Users where idUser = " + idUser
-                );
+                "select * from Users where idUser = " + idUser
+            );
             let SearchForArticle = await sql.query(
                 "select * from Articles left join Modeles on Articles.fk_model = Modeles.modeleId where articleId = " +
                 idArticle
-            );                        
+            );
+            let SearchForDetectionCrash = await sql.query(
+                "select DetectionCrash.fk_ligne,ligne,DetectionCrash.fk_machine,machine,DetectionCrash.fk_crashQualite from DetectionCrash " +
+                "left join Lignes on Lignes.ligneId = DetectionCrash.fk_ligne " +
+                "left join Machines on Machines.machineId = DetectionCrash.fk_machine " +
+                "where fk_crashQualite = " + idCrash
+            );
             const jsonToSend = {
-              crashQualiteId: result.recordset[0].crashQualiteId,
-              nbPieces: result.recordset[0].nbPieces,
-              description: result.recordset[0].description,
-              piecesJointes: result.recordset[0].piecesJointes,
-              dateCrash: result.recordset[0].dateCrash,
-              statut: result.recordset[0].status,
-              user: SearchForUser.recordset[0],
-              article: SearchForArticle.recordset[0],
+                crashQualiteId: result.recordset[0].crashQualiteId,
+                nbPieces: result.recordset[0].nbPieces,
+                description: result.recordset[0].description,
+                piecesJointes: result.recordset[0].piecesJointes,
+                dateCrash: result.recordset[0].dateCrash,
+                statut: result.recordset[0].status,
+                user: SearchForUser.recordset[0],
+                article: SearchForArticle.recordset[0],
+                detetionCrash: {
+                    ligneId: SearchForDetectionCrash.recordset[0].fk_ligne,
+                    ligne: SearchForDetectionCrash.recordset[0].ligne,
+                    machineId: SearchForDetectionCrash.recordset[0].fk_machine,
+                    machine: SearchForDetectionCrash.recordset[0].machine,
+                }
             };
             return res.status(200).send(jsonToSend);
         } catch (e) {
@@ -140,11 +153,11 @@ export const postCrashQualite = (req, res) => {
                         .input('fk_crashQualite', sql.Int, parseInt(crashId))
                         .query('INSERT INTO DetectionCrash (fk_ligne,fk_machine,fk_crashQualite) values (@fk_ligne,@fk_machine,@fk_crashQualite);')
                 }).catch(error => {
-                    res.status(400).send('Error when inserting detectionCrash: '+error)
+                    res.status(400).send('Error when inserting detectionCrash: ' + error)
                 });
                 res.status(200).send("the crash qualite was sucessfully enter.")
-        });
+            });
     }).catch(error => {
-        res.status(400).send('Error when inserting the crash: '+error)
+        res.status(400).send('Error when inserting the crash: ' + error)
     });
 }
