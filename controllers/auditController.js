@@ -134,58 +134,45 @@ export const postAudit = (req, res) => {
     })
     const result = auditObjectSchema.validate(req.body);
     if (result.error) {
-        res.status(400).send(result.error.details[0].message)
-        return
+        return res.status(400).send(result.error.details[0].message)
     }
     //1ere partie : Enregistrement de l'audit en DB
-    (async function () {
-        try {
-            let pool = await sql.connect(config)
-            const request = pool.request();
-            request
-                .input('fk_user', sql.Int, parseInt(req.body.fk_user))
-                .input('fk_objectifAnnuel', sql.Int, parseInt(req.body.objectifAnnuel))
-                .input('fk_article', sql.Int, parseInt(req.body.fk_articles))
-                .input('four', sql.VarChar(10), req.body.four)
-                .input('numContainer', sql.Int, parseInt(req.body.numContainer))
-                .input('totalVerres', sql.Int, parseInt(req.body.totalVerres))
-                .input('resultPourcentage', sql.Int, parseInt(req.body.resultPourcentage))
-                .input('rating', sql.VarChar(1), req.body.rating)
-                .input('commentaireGeneral', sql.VarChar(100), req.body.commentaireGeneral)
-                .input('action', sql.VarChar(100), req.body.action)
-                .input('dateDeb', sql.DateTime, req.body.dateDeb)
-                .query('INSERT INTO Audits (four,numContainer,totalVerres,pourcentageResultat,rating,commentaireGeneral,action,dateDebut,dateFin,fk_objectifAnnuel,fk_user,' +
-                    'fk_article) values (@four,@numContainer,@totalVerres,@resultPourcentage,@rating,@commentaireGeneral,@action,@dateDeb,GETDATE(),@fk_objectifAnnuel,@fk_user,@fk_article)')
-        } catch (e) {
-            return res.status(500).send("erreur : " + e);
-        }
-    })().then(
-        /*
-        ENREGISTREMENT DES CRITERES LIES A L AUDIT
-        Pour avoir le dernier enregistrement on doit recupérer l'id de l'audit créé :
-     */
-        (async () => {
-            try {
-                await sql.connect(config)
-                let result = await sql.query('SELECT TOP 1 auditId FROM Audits ORDER BY auditId DESC');
-                console.log("L'id de l'audit inseré est de : " + result.recordset[0].auditId)
-                const auditId = result.recordset[0].auditId;
-                //on boucle l'insert de critères
-                let pool = await sql.connect(config)
+    sql.connect(config).then(pool => {
+        pool.request().input('fk_user', sql.Int, parseInt(req.body.fk_user))
+            .input('fk_objectifAnnuel', sql.Int, parseInt(req.body.objectifAnnuel))
+            .input('fk_article', sql.Int, parseInt(req.body.fk_articles))
+            .input('four', sql.VarChar(10), req.body.four)
+            .input('numContainer', sql.Int, parseInt(req.body.numContainer))
+            .input('totalVerres', sql.Int, parseInt(req.body.totalVerres))
+            .input('resultPourcentage', sql.Int, parseInt(req.body.resultPourcentage))
+            .input('rating', sql.VarChar(1), req.body.rating)
+            .input('commentaireGeneral', sql.VarChar(100), req.body.commentaireGeneral)
+            .input('action', sql.VarChar(100), req.body.action)
+            .input('dateDeb', sql.DateTime, req.body.dateDeb)
+            .output("id", sql.Int)
+            .query('INSERT INTO Audits (four,numContainer,totalVerres,pourcentageResultat,rating,commentaireGeneral,action,dateDebut,dateFin,fk_objectifAnnuel,fk_user,' +
+                'fk_article)' +
+                ' values ' +
+                '(@four,@numContainer,@totalVerres,@resultPourcentage,@rating,@commentaireGeneral,@action,@dateDeb,GETDATE(),@fk_objectifAnnuel,@fk_user,@fk_article);' +
+                'SELECT SCOPE_IDENTITY() AS id;'
+            ).then(result => {
+            let auditId = result.recordset[0].id
+            sql.connect(config).then(pool2 => {
                 for (let i = 0; i < req.body.criteres.length; i++) {
-                    const request = pool.request();
-                    request.input('FK_auditId', sql.Int, parseInt(auditId))
+                    pool2.request().input('FK_auditId', sql.Int, parseInt(auditId))
                         .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
                         .input('observation', sql.VarChar, req.body.criteres[i].observation)
                         .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
                         .query('INSERT INTO Audit_Criteres (FK_auditId,FK_critereId,observation,valueCritere) VALUES (@FK_auditId,@FK_critereId,@observation,@valueCritere)')
                 }
-                return res.status(200).send('The audit was successfully register')
-            } catch (err) {
-                return res.status(400).send('Error : ' + err)
-            }
-        })()
-    )
+            }).catch(error => {
+                res.status(400).send('Error when inserting Audit criteres: ' + error)
+            });
+            res.status(200).send("the Audit was sucessfully enter.")
+        })
+    }).catch(error => {
+        res.status(400).send("Insert Audit insert Error : " + error);
+    })
 }
 
 /**
