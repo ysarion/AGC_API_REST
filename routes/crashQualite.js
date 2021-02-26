@@ -2,12 +2,13 @@ import express from 'express';
 import {
     getCrashQualites,
     getCrashQualite,
+    getAnalysesCrash,
     getZones,
     getLignes,
     getLignesByZones,
     getMachines,
     getMachinesByLignes,
-    postCrashQualite
+    postCrashQualite, postAnalyseCrash
 } from '../controllers/crashQualiteController.js';
 
 const router = express.Router();
@@ -17,6 +18,12 @@ const router = express.Router();
  * Récupérer la liste de tout les crash qualités
  */
 router.get('/', getCrashQualites);
+
+/**
+ * GET uri/crashQualites/analyseCrash
+ * Récupérer la liste de toutes les analyses de crash qualités
+ */
+router.get('/analysesCrash', getAnalysesCrash);
 
 /**
  * GET uri/crashQualites/zones
@@ -55,10 +62,16 @@ router.get('/zones/lignes/:id/machines', getMachinesByLignes);
 router.get('/:id', getCrashQualite);
 
 /**
- * POST uri/audit
+ * POST uri/crashQualite
  * Enregistrer un nouveau crash qualité
  */
 router.post('/', postCrashQualite);
+
+/**
+ * POST uri/crashQualites/analyseCrash
+ * Enregistrer une analyse d'un crash qualité
+ */
+router.post('/analyseCrash', postAnalyseCrash);
 
 export default router;
 

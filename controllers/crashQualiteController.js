@@ -13,6 +13,17 @@ export const getCrashQualites = (req, res) => {
         }
     })()
 }
+export const getAnalysesCrash = (req, res) => {
+    (async () => {
+        try {
+            await sql.connect(config)
+            let result = await sql.query('SELECT * FROM AnalyseCrash')
+            return res.status(200).send(result.recordset);
+        } catch (e) {
+            return res.status(400).send('erreur' + e);
+        }
+    })()
+}
 export const getCrashQualite = (req, res) => {
     (async () => {
         try {
@@ -159,5 +170,51 @@ export const postCrashQualite = (req, res) => {
             });
     }).catch(error => {
         res.status(400).send('Error when inserting the crash: ' + error)
+    });
+}
+
+export const postAnalyseCrash = (req, res) => {
+    let analyseCrash = Joi.object({
+        fk_crashQualite: Joi.number().integer().required(),
+        decision: Joi.string().allow(null).required(),
+        piecesJointes: Joi.string().allow(null).required(),
+        originCrash: {
+            fk_ligne: Joi.number().integer().required(),
+            fk_machine: Joi.number().integer().allow(null).required()
+        }
+    })
+
+    const schemaValidation = analyseCrash.validate(req.body);
+    if (schemaValidation.error) {
+        return res.status(400).send("error : " + schemaValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('fk_crashQualite', sql.Int, parseInt(req.body.fk_crashQualite))
+            .input('piecesJointes', sql.VarChar, req.body.piecesJointes)
+            .input('decision', sql.VarChar, req.body.decision)
+            .output("id", sql.Int)
+            .query('INSERT INTO AnalyseCrash (fk_crashQualite,decision,piecesJointes)  ' +
+                'values (@fk_crashQualite,@decision,@piecesJointes); SELECT SCOPE_IDENTITY() AS id;')
+            .then(result => {
+                let analyseId = result.recordset[0].id
+                sql.connect(config).then(pool2 => {
+                    pool2.request().input('fk_ligne', sql.Int, parseInt(req.body.originCrash.fk_ligne))
+                        .input('fk_machine', sql.Int, parseInt(req.body.originCrash.fk_machine))
+                        .input('fk_analyseCrash', sql.Int, parseInt(analyseId))
+                        .query('INSERT INTO OrigineCrash (fk_ligne,fk_machine,fk_analyseCrash) values (@fk_ligne,@fk_machine,@fk_analyseCrash);')
+                }).catch(error => {
+                    res.status(400).send('Error when inserting origine crash: ' + error)
+                });
+                sql.connect(config).then(pool3 => {
+                    pool3.request().input('crashQualiteId',sql.Int,parseInt(req.body.fk_crashQualite))
+                        .query('UPDATE CrashQualite SET statut = 0 WHERE crashQualiteId = @crashQualiteId;')
+                }).catch(error => {
+                    res.status(400).send('Error when Updating the crash statut: ' + error)
+                })
+                res.status(200).send("the Analyse was sucessfully enter.")
+            });
+    }).catch(error => {
+        res.status(400).send('Error when inserting the analyse: ' + error)
     });
 }
