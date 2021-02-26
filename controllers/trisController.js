@@ -147,75 +147,59 @@ export const postTri = (req, res) => {
     if (schemaValidation.error) {
         return res.status(400).send("error : " + schemaValidation.error.details[0].message)
     }
-    // Si le schéma correspond, on peut faire l'insert :
-    (async function () {
-        try {
-            let pool = await sql.connect(config)
-            const request = pool.request();
-            request
-                .input('fk_user', sql.Int, parseInt(req.body.fk_user))
-                .input('fk_typeTris', sql.Int, parseInt(req.body.fk_typeTris))
-                .input('fk_LieuAVO', sql.Int, parseInt(req.body.fk_LieuAVO))
-                .input('fk_market', sql.Int, parseInt(req.body.fk_typeTris))
-                .input('fk_article', sql.Int, parseInt(req.body.fk_articles))
-                .input('numGallia', sql.Int, parseInt(req.body.numGallia))
-                .input('nbPieces', sql.Int, parseInt(req.body.nbPieces))
-                .input('numOS', sql.Int, parseInt(req.body.numOS))
-                .input('commentaire', sql.VarChar(100), req.body.commentaire)
-                .input('dateDeb', sql.DateTime, req.body.dateDeb)
-                .query('INSERT INTO Tris (' +
-                    'numGallia,' +
-                    'nbPieces,' +
-                    'numOS,' +
-                    'commentaireGeneral,' +
-                    'dateDebut,' +
-                    'dateFin,' +
-                    'fk_typeTri,' +
-                    'fk_LieuAVO,' +
-                    'fk_market,' +
-                    'fk_user,' +
-                    'fk_article) ' +
-                    'values (' +
-                    '@numGallia,' +
-                    '@nbPieces,' +
-                    '@numOS,' +
-                    '@commentaire,' +
-                    '@dateDeb,' +
-                    'GETDATE(),' +
-                    '@fk_typeTris,' +
-                    '@fk_LieuAVO,' +
-                    '@fk_market,' +
-                    '@fk_user,' +
-                    '@fk_article)')
-        } catch (e) {
-            return res.status(500).send("erreur : " + e);
-        }
-    })().then(
-        /*
-       ENREGISTREMENT DES CRITERES LIES AU TRI
-       Pour avoir le dernier enregistrement on doit recupérer l'id du tri créé :
-    */
-        (async () => {
-            try {
-                await sql.connect(config)
-                let result = await sql.query('SELECT TOP 1 triId FROM Tris ORDER BY triId DESC');
-                //console.log("L'id du tri inseré est de : "+result.recordset[0].auditId)
-                const triId = result.recordset[0].triId;
-                //on boucle l'insert de critères
+    sql.connect(config).then(pool => {
+        pool.request().input('fk_user', sql.Int, parseInt(req.body.fk_user))
+            .input('fk_typeTris', sql.Int, parseInt(req.body.fk_typeTris))
+            .input('fk_LieuAVO', sql.Int, parseInt(req.body.fk_LieuAVO))
+            .input('fk_market', sql.Int, parseInt(req.body.fk_typeTris))
+            .input('fk_article', sql.Int, parseInt(req.body.fk_articles))
+            .input('numGallia', sql.Int, parseInt(req.body.numGallia))
+            .input('nbPieces', sql.Int, parseInt(req.body.nbPieces))
+            .input('numOS', sql.Int, parseInt(req.body.numOS))
+            .input('commentaire', sql.VarChar(100), req.body.commentaire)
+            .input('dateDeb', sql.DateTime, req.body.dateDeb)
+            .output("id", sql.Int)
+            .query('INSERT INTO Tris (' +
+                'numGallia,' +
+                'nbPieces,' +
+                'numOS,' +
+                'commentaireGeneral,' +
+                'dateDebut,' +
+                'dateFin,' +
+                'fk_typeTri,' +
+                'fk_LieuAVO,' +
+                'fk_market,' +
+                'fk_user,' +
+                'fk_article) ' +
+                'values (' +
+                '@numGallia,' +
+                '@nbPieces,' +
+                '@numOS,' +
+                '@commentaire,' +
+                '@dateDeb,' +
+                'GETDATE(),' +
+                '@fk_typeTris,' +
+                '@fk_LieuAVO,' +
+                '@fk_market,' +
+                '@fk_user,' +
+                '@fk_article); SELECT SCOPE_IDENTITY() AS id;').then(result => {
+            let triId = result.recordset[0].id
+            sql.connect(config).then(pool2 => {
                 for (let i = 0; i < req.body.criteres.length; i++) {
-                    let pool = await sql.connect(config)
-                    const request = pool.request();
-                    request.input('FK_triId', sql.Int, parseInt(triId))
+                    pool2.request().input('FK_triId', sql.Int, parseInt(triId))
                         .input('FK_critereId', sql.Int, parseInt(req.body.criteres[i].FK_critereId))
                         .input('valueCritere', sql.VarChar, req.body.criteres[i].valueCritere)
                         .query('INSERT INTO Tris_Criteres (FK_triId,FK_critereId,valueCritere) VALUES (@FK_triId,@FK_critereId,@valueCritere)')
                 }
-                return res.status(200).send('The "tri" was successfully register')
-            } catch (err) {
-                return res.status(400).send('Error : ' + err)
-            }
-        })()
-    )
+            }).catch(error => {
+                res.status(400).send('Error when inserting tri criteres: ' + error)
+            });
+            res.status(200).send("the tri was sucessfully enter.")
+        })
+    }).catch(error => {
+        res.status(400).send("Insert tri Error : "+ error);
+    })
+
 }
 
 /**
