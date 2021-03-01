@@ -8,7 +8,7 @@ import {
     getLignesByZones,
     getMachines,
     getMachinesByLignes,
-    postCrashQualite, postAnalyseCrash, getAnalyseCrash
+    postCrashQualite, postAnalyseCrash, getAnalyseCrash, postZones, postLignes
 } from '../controllers/crashQualiteController.js';
 
 const router = express.Router();
@@ -78,6 +78,18 @@ router.post('/', postCrashQualite);
  * Enregistrer une analyse d'un crash qualité
  */
 router.post('/analyseCrash', postAnalyseCrash);
+
+/**
+ * POST uri/crashQualites/zones
+ * Enregistrer une nouvelle zone
+ */
+router.post('/zones', postZones);
+
+/**
+ * POST uri/crashQualites/zones/lignes
+ * Enregistrer une nouvelle ligne
+ */
+router.post('/zones/lignes', postLignes);
 
 export default router;
 

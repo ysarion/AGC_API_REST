@@ -147,15 +147,30 @@ export const getMachines = (req, res) => {
     })()
 }
 export const getMachinesByLignes = (req, res) => {
-    (async () => {
-        try {
-            await sql.connect(config)
-            let result = await sql.query('SELECT * FROM Machines where obsolete = 0 and fk_ligne =' + req.params['id'])
-            return res.status(200).send(result.recordset);
-        } catch (e) {
-            return res.status(400).send('erreur' + e);
-        }
-    })()
+    const jsonToSend = [];
+    sql.connect(config).then(pool=>{
+        pool.request()
+            .input('fk_ligne',sql.Int,parseInt(req.params['id']))
+            .query('SELECT fk_machine FROM Lignes_Machines where fk_ligne = @fk_ligne').then(result => {
+                if(result.recordset.length > 0){
+                    for (let i=0; i<result.recordset.length;i++){
+                        sql.connect(config).then(pool2 => {
+                            pool2.request()
+                                .query('select * from Machines where machineId = '+ result.recordset[i].fk_machine).then(machine =>{
+                                jsonToSend.push(machine.recordset[0])
+                                if(i === result.recordset.length-1){
+                                    res.status(200).send(jsonToSend);
+                                }
+                            })
+                        })
+                    }
+                } else {
+                    res.status(400).send('Aucunes machines liées à la ligne ou ligne inexistante')
+                }
+        })
+    }).catch(error => {
+        res.status(400).send(error)
+    })
 }
 
 export const postCrashQualite = (req, res) => {
@@ -248,4 +263,65 @@ export const postAnalyseCrash = (req, res) => {
     }).catch(error => {
         res.status(400).send('Error when inserting the analyse: ' + error)
     });
+}
+
+export const postZones = (req, res) => {
+    let zoneSchema = Joi.object({
+        zoneId: Joi.number().integer().allow(null).required(),
+        zone: Joi.string().required()
+    })
+    let requestValidation = zoneSchema.validate(req.body);
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('zone',sql.VarChar,req.body.zone)
+            .query('INSERT INTO Zones (zone) values (@zone);')
+        return res.status(200).send('La nouvelle zone été enregistré')
+    }).catch(error => {
+        return res.status(400).send('Erreur lors de l\'enregistrement de la zone : '+error)
+    })
+}
+
+export const postLignes = (req, res) => {
+    let ligneSchema = Joi.object({
+        ligneId: Joi.number().integer().allow(null).required(),
+        fk_zone: Joi.number().integer().required(),
+        ligne: Joi.string().required()
+    })
+    let requestValidation = ligneSchema.validate(req.body);
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('ligne',sql.VarChar,req.body.ligne)
+            .input('fk_zone',sql.Int,req.body.fk_zone)
+            .query('INSERT INTO Lignes (ligne,fk_zone) values (@ligne,@fk_zone);')
+        return res.status(200).send('La nouvelle ligne été enregistrée')
+    }).catch(error => {
+        return res.status(400).send('Erreur lors de l\'enregistrement de la nouvelle ligne : '+error)
+    })
+}
+
+export const postMachines = (req, res) => {
+    let machineSchema = Joi.object({
+        ligneId: Joi.number().integer().allow(null).required(),
+        fk_zone: Joi.number().integer().required(),
+        ligne: Joi.string().required()
+    })
+    let requestValidation = ligneSchema.validate(req.body);
+    if(requestValidation.error){
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('ligne',sql.VarChar,req.body.ligne)
+            .input('fk_zone',sql.Int,req.body.fk_zone)
+            .query('INSERT INTO Lignes (ligne,fk_zone) values (@ligne,@fk_zone);')
+        return res.status(200).send('La nouvelle ligne été enregistrée')
+    }).catch(error => {
+        return res.status(400).send('Erreur lors de l\'enregistrement de la nouvelle ligne : '+error)
+    })
 }
