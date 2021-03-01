@@ -29,7 +29,7 @@ export const getAnalyseCrash = (req, res) => {
         try {
             let idCrash = req.params['id'];
             await sql.connect(config)
-            let result = await sql.query('SELECT * FROM AnalyseCrash where fk_crashQualite ='+idCrash)
+            let result = await sql.query('SELECT * FROM AnalyseCrash where fk_crashQualite =' + idCrash)
 
             let SearchForOriginCrash = await sql.query(
                 "select OrigineCrash.fk_ligne,ligne,OrigineCrash.fk_machine,machine,OrigineCrash.fk_analyseCrash from OrigineCrash " +
@@ -148,25 +148,25 @@ export const getMachines = (req, res) => {
 }
 export const getMachinesByLignes = (req, res) => {
     const jsonToSend = [];
-    sql.connect(config).then(pool=>{
+    sql.connect(config).then(pool => {
         pool.request()
-            .input('fk_ligne',sql.Int,parseInt(req.params['id']))
+            .input('fk_ligne', sql.Int, parseInt(req.params['id']))
             .query('SELECT fk_machine FROM Lignes_Machines where fk_ligne = @fk_ligne').then(result => {
-                if(result.recordset.length > 0){
-                    for (let i=0; i<result.recordset.length;i++){
-                        sql.connect(config).then(pool2 => {
-                            pool2.request()
-                                .query('select * from Machines where machineId = '+ result.recordset[i].fk_machine).then(machine =>{
-                                jsonToSend.push(machine.recordset[0])
-                                if(i === result.recordset.length-1){
-                                    res.status(200).send(jsonToSend);
-                                }
-                            })
+            if (result.recordset.length > 0) {
+                for (let i = 0; i < result.recordset.length; i++) {
+                    sql.connect(config).then(pool2 => {
+                        pool2.request()
+                            .query('select * from Machines where machineId = ' + result.recordset[i].fk_machine).then(machine => {
+                            jsonToSend.push(machine.recordset[0])
+                            if (i === result.recordset.length - 1) {
+                                res.status(200).send(jsonToSend);
+                            }
                         })
-                    }
-                } else {
-                    res.status(400).send('Aucunes machines liées à la ligne ou ligne inexistante')
+                    })
                 }
+            } else {
+                res.status(400).send('Aucunes machines liées à la ligne ou ligne inexistante')
+            }
         })
     }).catch(error => {
         res.status(400).send(error)
@@ -253,7 +253,7 @@ export const postAnalyseCrash = (req, res) => {
                     res.status(400).send('Error when inserting origine crash: ' + error)
                 });
                 sql.connect(config).then(pool3 => {
-                    pool3.request().input('crashQualiteId',sql.Int,parseInt(req.body.fk_crashQualite))
+                    pool3.request().input('crashQualiteId', sql.Int, parseInt(req.body.fk_crashQualite))
                         .query('UPDATE CrashQualite SET statut = 0 WHERE crashQualiteId = @crashQualiteId;')
                 }).catch(error => {
                     res.status(400).send('Error when Updating the crash statut: ' + error)
@@ -271,16 +271,16 @@ export const postZones = (req, res) => {
         zone: Joi.string().required()
     })
     let requestValidation = zoneSchema.validate(req.body);
-    if(requestValidation.error){
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     sql.connect(config).then(pool => {
         pool.request()
-            .input('zone',sql.VarChar,req.body.zone)
+            .input('zone', sql.VarChar, req.body.zone)
             .query('INSERT INTO Zones (zone) values (@zone);')
         return res.status(200).send('La nouvelle zone été enregistré')
     }).catch(error => {
-        return res.status(400).send('Erreur lors de l\'enregistrement de la zone : '+error)
+        return res.status(400).send('Erreur lors de l\'enregistrement de la zone : ' + error)
     })
 }
 
@@ -291,37 +291,50 @@ export const postLignes = (req, res) => {
         ligne: Joi.string().required()
     })
     let requestValidation = ligneSchema.validate(req.body);
-    if(requestValidation.error){
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     sql.connect(config).then(pool => {
         pool.request()
-            .input('ligne',sql.VarChar,req.body.ligne)
-            .input('fk_zone',sql.Int,req.body.fk_zone)
+            .input('ligne', sql.VarChar, req.body.ligne)
+            .input('fk_zone', sql.Int, req.body.fk_zone)
             .query('INSERT INTO Lignes (ligne,fk_zone) values (@ligne,@fk_zone);')
         return res.status(200).send('La nouvelle ligne été enregistrée')
     }).catch(error => {
-        return res.status(400).send('Erreur lors de l\'enregistrement de la nouvelle ligne : '+error)
+        return res.status(400).send('Erreur lors de l\'enregistrement de la nouvelle ligne : ' + error)
     })
 }
 
 export const postMachines = (req, res) => {
     let machineSchema = Joi.object({
-        ligneId: Joi.number().integer().allow(null).required(),
-        fk_zone: Joi.number().integer().required(),
-        ligne: Joi.string().required()
+        machineId: Joi.number().integer().allow(null).required(),
+        machine: Joi.string().required(),
+        listLignes: Joi.array().items(Joi.number().integer()).required()
     })
-    let requestValidation = ligneSchema.validate(req.body);
-    if(requestValidation.error){
+    let requestValidation = machineSchema.validate(req.body);
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     sql.connect(config).then(pool => {
         pool.request()
-            .input('ligne',sql.VarChar,req.body.ligne)
-            .input('fk_zone',sql.Int,req.body.fk_zone)
-            .query('INSERT INTO Lignes (ligne,fk_zone) values (@ligne,@fk_zone);')
-        return res.status(200).send('La nouvelle ligne été enregistrée')
+            .input('machine', sql.VarChar, req.body.machine)
+            .output('id', sql.Int)
+            .query('INSERT INTO Machines (machine) values (@machine);SELECT SCOPE_IDENTITY() AS id;').then(
+            result => {
+                let newMachineId =  result.recordset[0].id
+                sql.connect(config).then(pool2 => {
+                    for (let i = 0; i < req.body.listLignes.length; i++) {
+                        pool2.request()
+                            .input('fk_machine', sql.Int, parseInt(newMachineId))
+                            .input('fk_ligne', sql.Int, parseInt(req.body.listLignes[i]))
+                            .query('INSERT INTO Lignes_Machines (fk_machine,fk_ligne) values (@fk_machine,@fk_ligne);')
+                    }
+                }).catch(error => {
+                    res.status(400).send(error)
+                })
+            })
+        return res.status(200).send('La nouvelle machine été enregistrée')
     }).catch(error => {
-        return res.status(400).send('Erreur lors de l\'enregistrement de la nouvelle ligne : '+error)
+        return res.status(400).send('Erreur lors de l\'enregistrement de la nouvelle ligne : ' + error)
     })
 }
