@@ -7,7 +7,7 @@ import {
     getAllCritProcessRelation,
     postTypesCriteres,
     postProcess,
-    postCriteres
+    postCriteres, getTypeCritById, putTypesCriteres, getProcessById, putProcess, getCritereById, putCritere
 } from "../controllers/criteresController.js";
 
 const router = express.Router();
@@ -19,10 +19,22 @@ const router = express.Router();
 router.get('/', getCriteres);
 
 /**
+ GET uri/criteres
+ Donne un critère par son id
+ **/
+router.get('/id/:id', getCritereById);
+
+/**
  GET uri/criteres/process
  Donne la liste de tous les process qu'un critère peut avoir
  **/
 router.get('/process', getAllCritereProcess);
+
+/**
+ GET uri/criteres/processById/:id
+ Donne un process en fonction de son id
+ **/
+router.get('/processById/:id', getProcessById);
 
 /**
  GET uri/criteres/process/relation
@@ -43,10 +55,22 @@ router.get('/process/:idProcess', getAllCriteresByProcess);
 router.get('/typeCriteres', getAllTypesCriteres);
 
 /**
+ GET uri/criteres/typeCritere/:id
+ Donne la liste de tous les types de critere qu'un critère peut avoir
+ **/
+router.get('/typeCritere/:id', getTypeCritById);
+
+/**
  POST uri/criteres/typeCriteres
  Insert un nouveau type de criteres en database
  **/
 router.post('/typeCriteres', postTypesCriteres);
+
+/**
+ POST uri/criteres/typeCriteres
+ Insert un nouveau type de criteres en database
+ **/
+router.put('/typeCriteres', putTypesCriteres);
 
 /**
  POST uri/criteres/process
@@ -55,8 +79,20 @@ router.post('/typeCriteres', postTypesCriteres);
 router.post('/process', postProcess);
 
 /**
+ POST uri/criteres/process
+ Update un process en database
+ **/
+router.put('/process', putProcess);
+
+/**
  POST uri/criteres
  Insert un nouveau process en database
  **/
 router.post('/', postCriteres);
+
+/**
+ POST uri/criteres
+ Update un process en database
+ **/
+router.put('/', putCritere);
 export default router;

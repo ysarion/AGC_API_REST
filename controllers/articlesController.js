@@ -39,6 +39,24 @@ export const getArticlesModeles = (req, res) => {
 }
 
 /**
+ * function use to get the list of modele that an article can have
+ * @param req
+ * @param res
+ */
+export const getModeleById = (req, res) => {
+    let id = req.params['id']
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('modeleId', sql.Int, parseInt(id))
+            .query('SELECT * from Modeles where modeleId = @modeleId').then(result => {
+                return res.status(200).send(result.recordset[0])
+                });
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
+
+/**
  * function use to get the list of all codeArticles
  * @param req
  * @param res
@@ -66,12 +84,9 @@ export const getCodesArticlesByModele = (req, res) => {
         try {
             await sql.connect(config)
             let param = parseInt(req.params['idModele'])
-            console.log(param);
             let result = await sql.query('select articleId,codeArticle from Articles where fk_model = ' + param)
-            console.log(result);
             res.status(200).send(result.recordset);
         } catch (err) {
-            console.log(err);
             res.status(400).send('erreur : ' + err);
         }
     })()
@@ -127,6 +142,28 @@ export const postModele = (req, res) => {
     })();
 }
 
+export const putModele = (req, res) => {
+    let modele = joi.object({
+        modeleId: joi.number().integer().required(),
+        obsolete: joi.boolean(),
+        modele: joi.string().min(3).max(60).required()
+    })
+    let requestValidation = modele.validate(req.body)
+    if (requestValidation.error) {
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('modele',sql.VarChar,req.body.modele)
+            .input('modeleId',sql.Int,req.body.modeleId)
+            .query('UPDATE Modeles SET modele = @modele WHERE modeleId = @modeleId').then(result => {
+                return res.status(200).send(result.recordset)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
+
 /**
  * function use to register a new article in database
  * @param req
@@ -142,7 +179,7 @@ export const postArticle = (req, res) => {
         partNumber: joi.string().min(3).max(80).required()
     })
     let requestValidation = article.validate(req.body)
-    if(requestValidation.error){
+    if (requestValidation.error) {
         return res.status(400).send(requestValidation.error.details[0].message)
     }
     (async function () {
@@ -160,4 +197,37 @@ export const postArticle = (req, res) => {
             return res.status(500).send("erreur : " + e);
         }
     })();
+}
+
+/**
+ * function use to update an article in database
+ * @param req
+ * @param res
+ * @returns {this}
+ */
+export const putArticle = (req, res) => {
+    let article = joi.object({
+        articleId: joi.number().integer().allow(null),
+        codeArticle: joi.number().integer().required(),
+        fk_model: joi.number().integer().required(),
+        descriptionSAP: joi.string().min(6).max(100).required(),
+        partNumber: joi.string().min(3).max(80).required()
+    })
+    let requestValidation = article.validate(req.body)
+    if (requestValidation.error) {
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('articleId',sql.Int,parseInt(req.body.articleId))
+            .input('codeArticle',sql.Int,parseInt(req.body.codeArticle))
+            .input('fk_model',sql.Int,parseInt(req.body.fk_model))
+            .input('descriptionSAP',sql.VarChar,req.body.descriptionSAP)
+            .input('partNumber',sql.VarChar,req.body.partNumber)
+            .query('UPDATE Articles SET codeArticle=@codeArticle,fk_model=@fk_model,descriptionSAP=@descriptionSAP,partNumber=@partNumber WHERE articleId=@articleId').then(result => {
+                return res.status(200).send(result.rowsAffected)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
 }

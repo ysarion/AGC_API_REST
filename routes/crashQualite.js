@@ -8,7 +8,14 @@ import {
     getLignesByZones,
     getMachines,
     getMachinesByLignes,
-    postCrashQualite, postAnalyseCrash, getAnalyseCrash, postZones, postLignes, postMachines
+    postCrashQualite,
+    postAnalyseCrash,
+    getAnalyseCrash,
+    postZones,
+    postLignes,
+    postMachines,
+    getMachinesLignesRelation,
+    getLigneById, putLigne, getZoneById, putZones, getMachineById, putMachines
 } from '../controllers/crashQualiteController.js';
 
 const router = express.Router();
@@ -44,6 +51,18 @@ router.get('/zones', getZones);
 router.get('/zones/lignes', getLignes);
 
 /**
+ * GET uri/crashQualites/zones/:id
+ * Avoir une zone par son id
+ */
+router.get('/zone/:id', getZoneById);
+
+/**
+ * GET uri/crashQualites/zones/lignes/id
+ * Avoir la liste des lignes
+ */
+router.get('/zones/ligne/:id', getLigneById);
+
+/**
  * GET uri/crashQualites/zones/:id/lignes
  * Avoir la liste des lignes en fonction des zones
  */
@@ -55,11 +74,25 @@ router.get('/zones/:id/lignes', getLignesByZones);
  */
 router.get('/zones/lignes/machines', getMachines);
 
+
+/**
+ * GET uri/crashQualites/zones/lignes/machines/relations
+ * Avoir la liste des machines
+ */
+router.get('/zones/lignes/machines/relations', getMachinesLignesRelation);
+
+/**
+ * GET uri/crashQualites/zones/lignes/machines
+ * Avoir la liste des machines
+ */
+router.get('/zones/lignes/machine/:id', getMachineById);
+
 /**
  * GET uri/crashQualites/zones/lignes/:id/machines
  * Avoir la liste des machines
  */
 router.get('/zones/lignes/:id/machines', getMachinesByLignes);
+
 
 /**
  * GET uri/crashQualites/:id
@@ -86,16 +119,36 @@ router.post('/analyseCrash', postAnalyseCrash);
 router.post('/zones', postZones);
 
 /**
+ * POST uri/crashQualites/zones
+ * Update une zone
+ */
+router.put('/zones', putZones);
+
+/**
  * POST uri/crashQualites/zones/lignes
  * Enregistrer une nouvelle ligne
  */
 router.post('/zones/lignes', postLignes);
 
 /**
+ * PUT uri/crashQualites/zones/lignes
+ * Update une ligne
+ */
+router.put('/zones/lignes', putLigne);
+
+/**
  * POST uri/crashQualites/zones/lignes/machines
  * Enregistrer une nouvelle machine
  */
 router.post('/zones/lignes/machines', postMachines);
+
+/**
+ * POST uri/crashQualites/zones/lignes/machines
+ * Update une machine
+ */
+router.put('/zones/lignes/machines', putMachines);
+
+
 
 export default router;
 

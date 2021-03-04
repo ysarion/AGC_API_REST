@@ -38,7 +38,21 @@ export const getTypesTris = (req, res) => {
         }
     })()
 }
-
+export const getTypeTriById = (req, res) => {
+    let typeTriId = req.params['id'];
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('typeTriId', sql.Int, typeTriId)
+            .query('SELECT typeTriId,typeTriNom FROM TypesTris WHERE typeTriId=@typeTriId')
+            .then(result => {
+                return res.status(200).send(result.recordset[0])
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
 /**
  * function use to get all avo's location
  * @param req
@@ -56,7 +70,23 @@ export const getLieuxAVO = (req, res) => {
         }
     })()
 }
-
+export const getLieuxAvoById = (req, res) => {
+    let lieuAvoId = req.params['id']
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('lieuAvoId', sql.Int, lieuAvoId)
+            .query('SELECT lieuAvoId,nomLieu,fk_typeTri FROM LieuxAVO where lieuAvoId=@lieuAvoId')
+            .then(result => {
+                return res.status(200).send(result.recordset[0])
+            }).catch(error => {
+                return res.status(400).send(error)
+            }
+        )
+    }).catch(error => {
+            return res.status(400).send(error)
+        }
+    )
+}
 /**
  * function use to get all market
  * @param req
@@ -199,7 +229,7 @@ export const postTri = (req, res) => {
             res.status(200).send("the tri was sucessfully enter.")
         })
     }).catch(error => {
-        res.status(400).send("Insert tri Error : "+ error);
+        res.status(400).send("Insert tri Error : " + error);
     })
 
 }
@@ -232,6 +262,29 @@ export const postTypesTris = (req, res) => {
         }
     })();
 }
+export const putTypesTris = (req, res) => {
+    let typeTry = joi.object({
+        typeTriNom: joi.string().min(3).max(60).required(),
+        typeTriId: joi.number().integer().required()
+    })
+    let requestValidation = typeTry.validate(req.body);
+    if (requestValidation.error) {
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('typeTriId', sql.Int, req.body.typeTriId)
+            .input('typeTriNom', sql.VarChar, req.body.typeTriNom)
+            .query('UPDATE TypesTris SET typeTriNom=@typeTriNom WHERE typeTriId=@typeTriId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
 
 /**
  * function use to insert a new place of AVO
@@ -255,10 +308,41 @@ export const postLieuAVO = (req, res) => {
             const request = pool.request();
             request
                 .input('nomLieu', sql.VarChar(80), req.body.nomLieu)
-                .query('INSERT INTO LieuxAVO (nomLieu,fk_typeTri_AVO) values (@nomLieu,2);')
+                .query('INSERT INTO LieuxAVO (nomLieu,fk_typeTri) values (@nomLieu,2);')
             return res.status(200).send("The new \"nomLieu\" was successfully register")
         } catch (e) {
             return res.status(500).send("erreur : " + e);
         }
     })();
+}
+
+/**
+ * function use to update an AVO
+ * @param req
+ * @param res
+ * @returns {this}
+ */
+export const putLieuAVO = (req, res) => {
+    let lieuAVO = joi.object({
+        nomLieu: joi.string().min(3).max(30).required(),
+        lieuAvoId: joi.number().integer().required(),
+        fk_typeTri: joi.number().integer().allow(null)
+    })
+    let requestValidation = lieuAVO.validate(req.body)
+    if (requestValidation.error) {
+        return res.status(400).send(requestValidation.error.details[0].message)
+    }
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('nomLieu', sql.VarChar(80), req.body.nomLieu)
+            .input('lieuAvoId', sql.Int, req.body.lieuAvoId)
+            .query('UPDATE LieuxAVO SET nomLieu=@nomLieu WHERE lieuAvoId=@lieuAvoId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
 }

@@ -8,7 +8,7 @@ import {
     getLieuxAVO,
     getMarket,
     postTypesTris,
-    postLieuAVO
+    postLieuAVO, getLieuxAvoById, putLieuAVO, getTypeTriById, putTypesTris
 } from '../controllers/trisController.js'
 
 const router = express.Router();
@@ -26,10 +26,22 @@ router.get('/', getTris);
 router.get('/typesTris', getTypesTris);
 
 /**
+ * GET uri/tris/typesTris/:id
+ * Récupérer un type de tri par son id
+ */
+router.get('/typesTris/:id', getTypeTriById);
+
+/**
  * GET uri/tris/typesTris/AVO/Lieux
  * Récupérer la liste de tout les tris
  */
 router.get('/typesTris/AVO/Lieux', getLieuxAVO);
+
+/**
+ * GET uri/tris/typesTris/AVO/Lieux/:id
+ * Récupérer un avo par id
+ */
+router.get('/typesTris/AVO/Lieux/:id', getLieuxAvoById);
 
 /**
  * GET uri/tris/criteres
@@ -62,10 +74,22 @@ router.post('/', postTri);
 router.post('/typesTris', postTypesTris);
 
 /**
+ * PUT uri/tris/typesTris
+ * Enregistrer un nouveau type de tris
+ */
+router.put('/typesTris', putTypesTris);
+
+/**
  * POST uri/tris/typesTris/AVO/Lieux
  * Enregistrer un nouveau lieux pour les AVO
  */
 router.post('/typesTris/AVO/Lieux', postLieuAVO);
+
+/**
+ * PUT uri/tris/typesTris/AVO/Lieux
+ * Update un lieux pour les AVO
+ */
+router.put('/typesTris/AVO/Lieux', putLieuAVO);
 
 export default router;
 

@@ -20,9 +20,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a08524c-11a3-4bdc-8e89-c382c95cbcd2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/articlesController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/articlesController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/crashQualiteController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/crashQualiteController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/criteresController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/criteresController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/trisController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/trisController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/usersController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/usersController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/articles.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/articles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/crashQualite.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/crashQualite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/criteres.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/criteres.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/tris.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/tris.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +57,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../application-test" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="Docker" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.2.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -135,7 +144,11 @@
       <workItem from="1614244972953" duration="4797000" />
       <workItem from="1614249980328" duration="3447000" />
       <workItem from="1614329620861" duration="9198000" />
-      <workItem from="1614591102453" duration="8195000" />
+      <workItem from="1614591102453" duration="13834000" />
+      <workItem from="1614675404485" duration="3996000" />
+      <workItem from="1614699871253" duration="8568000" />
+      <workItem from="1614761571516" duration="7113000" />
+      <workItem from="1614851276104" duration="16470000" />
     </task>
     <servers />
   </component>
@@ -167,10 +180,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="542" y="214" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1611748400122" />
-    <state x="549" y="154" key="FileChooserDialogImpl" timestamp="1614178298017">
+    <state x="549" y="154" key="FileChooserDialogImpl" timestamp="1614851301729">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1614178298017" />
+    <state x="549" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1614851301729" />
     <state x="593" y="332" key="Github.CreateGistDialog" timestamp="1611140712442">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -179,9 +192,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1610961919085" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1614336115571">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1614852892936">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1614336115571" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1614852892936" />
   </component>
 </project>
