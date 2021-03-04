@@ -49,8 +49,8 @@ export const getModeleById = (req, res) => {
         pool.request()
             .input('modeleId', sql.Int, parseInt(id))
             .query('SELECT * from Modeles where modeleId = @modeleId').then(result => {
-                return res.status(200).send(result.recordset[0])
-                });
+            return res.status(200).send(result.recordset[0])
+        });
     }).catch(error => {
         return res.status(400).send(error)
     })
@@ -154,10 +154,10 @@ export const putModele = (req, res) => {
     }
     sql.connect(config).then(pool => {
         pool.request()
-            .input('modele',sql.VarChar,req.body.modele)
-            .input('modeleId',sql.Int,req.body.modeleId)
+            .input('modele', sql.VarChar, req.body.modele)
+            .input('modeleId', sql.Int, req.body.modeleId)
             .query('UPDATE Modeles SET modele = @modele WHERE modeleId = @modeleId').then(result => {
-                return res.status(200).send(result.recordset)
+            return res.status(200).send(result.recordset)
         })
     }).catch(error => {
         return res.status(400).send(error)
@@ -219,13 +219,30 @@ export const putArticle = (req, res) => {
     }
     sql.connect(config).then(pool => {
         pool.request()
-            .input('articleId',sql.Int,parseInt(req.body.articleId))
-            .input('codeArticle',sql.Int,parseInt(req.body.codeArticle))
-            .input('fk_model',sql.Int,parseInt(req.body.fk_model))
-            .input('descriptionSAP',sql.VarChar,req.body.descriptionSAP)
-            .input('partNumber',sql.VarChar,req.body.partNumber)
+            .input('articleId', sql.Int, parseInt(req.body.articleId))
+            .input('codeArticle', sql.Int, parseInt(req.body.codeArticle))
+            .input('fk_model', sql.Int, parseInt(req.body.fk_model))
+            .input('descriptionSAP', sql.VarChar, req.body.descriptionSAP)
+            .input('partNumber', sql.VarChar, req.body.partNumber)
             .query('UPDATE Articles SET codeArticle=@codeArticle,fk_model=@fk_model,descriptionSAP=@descriptionSAP,partNumber=@partNumber WHERE articleId=@articleId').then(result => {
+            return res.status(200).send(result.rowsAffected)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
+
+export const deleteArticle = (req, res) => {
+    let articleId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('articleId', sql.Int, articleId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Articles SET obsolete=@obsolete WHERE articleId=@articleId;')
+            .then(result => {
                 return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
         })
     }).catch(error => {
         return res.status(400).send(error)

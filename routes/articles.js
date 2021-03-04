@@ -7,37 +7,38 @@ import {
     getArticleByCode,
     postModele,
     postArticle,
-    getModeleById, putModele, putArticle
+    getModeleById, putModele, putArticle, deleteArticle
 } from '../controllers/articlesController.js'
+
 const router = express.Router();
 
 /**
-    GET uri/articles
-    Recupérer la liste des articles
+ GET uri/articles
+ Recupérer la liste des articles
  **/
 router.get('/', getArticles);
 
 /**
-    GET uri/articles/modeles
-    Recupérer la liste des modèles de voiture des articles
+ GET uri/articles/modeles
+ Recupérer la liste des modèles de voiture des articles
  **/
 router.get('/modeles', getArticlesModeles);
 
 /**
-    GET uri/articles/modeles/:id
-    Recupérer la liste des modèles de voiture des articles
+ GET uri/articles/modeles/:id
+ Recupérer la liste des modèles de voiture des articles
  **/
 router.get('/modeles/:id', getModeleById);
 
 /**
-    GET uri/articles/codesArticle
-    Recupérer la liste des codes articles
+ GET uri/articles/codesArticle
+ Recupérer la liste des codes articles
  **/
 router.get('/codesArticles', getCodesArticles);
 
 /**
-    GET uri/articles/codesArticle/modele/:idModele
-    Recupérer la liste des codes articles par modele
+ GET uri/articles/codesArticle/modele/:idModele
+ Recupérer la liste des codes articles par modele
  **/
 router.get('/codesArticles/modele/:idModele', getCodesArticlesByModele);
 
@@ -51,26 +52,30 @@ router.get('/:code', getArticleByCode)
  * POST uri/articles/modeles
  * route use to insert a modele in database
  */
-router.post('/modeles',postModele)
+router.post('/modeles', postModele)
 
 /**
  * PUT uri/articles/modeles
  * route use to update a modele in database
  */
-router.put('/modeles',putModele)
+router.put('/modeles', putModele)
 
 /**
  * POST uri/articles
  * route use to insert an article in database
  */
-router.post('/',postArticle)
+router.post('/', postArticle)
 
 /**
  * PUT uri/articles
  * route use to insert an article in database
  */
-router.put('/',putArticle)
+router.put('/', putArticle)
 
+/**
+ * DEL uri/articles/:id
+ */
+router.delete('/', deleteArticle)
 export default router;
 
 
