@@ -234,8 +234,43 @@ export const postObjectifAnnuel = (req, res) => {
 
     }
 }
-/*
-@   todo Create update route & function
- */
+export const deleteObjectif = (req, res) => {
+    let objectifId = req.body.id
+    if (req.body.obsolete) {
+        sql.connect(config).then(pool => {
+            pool.request()
+                .input('objectifId', sql.Int, objectifId)
+                .input('actif', sql.Bit, false)
+                .query('UPDATE ObjectifsAnnuel SET actif=@actif WHERE objectifId=@objectifId;')
+                .then(result => {
+                    return res.status(200).send(result.rowsAffected)
+                }).catch(error => {
+                return res.status(400).send(error)
+            })
+        }).catch(error => {
+            return res.status(400).send(error)
+        })
+    } else {
+        sql.connect(config).then(pool => {
+            pool.request()
+                .query('UPDATE ObjectifsAnnuel SET actif=0 WHERE actif=1;')
+                .then(() => {
+                    sql.connect(config).then(pool2 => {
+                        pool2.request()
+                            .input('objectifId', sql.Int, objectifId)
+                            .input('actif', sql.Bit, true)
+                            .query('UPDATE ObjectifsAnnuel SET actif=@actif WHERE objectifId=@objectifId;')
+                            .then(result => {
+                                return res.status(200).send(result.rowsAffected)
+                            }).catch(error => {
+                            return res.status(400).send(error)
+                        })
+                    }).catch(error => {
+                        return res.status(400).send(error)
+                    })
+                })
+        })
+    }
+}
 
 

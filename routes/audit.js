@@ -5,7 +5,7 @@ import {
     getObjectifAnnuel,
     postAudit,
     postObjectifAnnuel,
-    getAllObjectifAnnuel
+    getAllObjectifAnnuel, deleteObjectif
 } from '../controllers/auditController.js'
 
 const router = express.Router();
@@ -46,6 +46,12 @@ router.post('/', postAudit);
  * Enregistrer un nouvel objectif
  */
 router.post('/objectif', postObjectifAnnuel);
+
+/**
+ * DELETE uri/audits/objectif
+ * Delete un objectif
+ */
+router.delete('/objectif', deleteObjectif);
 
 export default router;
 
