@@ -202,6 +202,22 @@ export const putUser = (req, res) => {
         return res.status(400).send(error)
     })
 }
+export const deleteUser = (req, res) => {
+    let idUser = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('idUser', sql.Int, idUser)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Users SET obsolete=@obsolete WHERE idUser=@idUser;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
 
 export const postEquipe = (req, res) => {
     let equipe = Joi.object({

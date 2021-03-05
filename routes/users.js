@@ -6,7 +6,7 @@ import {
     postEquipe,
     getEquipes,
     getRoles,
-    getEquipeById, putEquipe, getUserById, putUser, deleteEquipe
+    getEquipeById, putEquipe, getUserById, putUser, deleteEquipe, deleteUser
 } from '../controllers/usersController.js'
 
 const router = express.Router();
@@ -40,12 +40,16 @@ router.get('/id/:id', getUserById);
 
 //POST uris/users/
 router.post('/', postUser);
-
 /**
  * PUT uri/users
  * function use to update a user
  */
 router.put('/', putUser);
+/**
+ * DELETE uri/users
+ * function use to delete a user
+ */
+router.delete('/', deleteUser);
 
 /**
  * POST uri/users/equipe
@@ -60,6 +64,7 @@ router.post('/equipe', postEquipe);
 router.put('/equipe', putEquipe);
 
 router.delete('/equipe', deleteEquipe);
+
 export default router;
 
 
