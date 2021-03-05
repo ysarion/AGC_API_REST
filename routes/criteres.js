@@ -14,7 +14,7 @@ import {
     putProcess,
     getCritereById,
     putCritere,
-    deleteCritere, deleteProcess
+    deleteCritere, deleteProcess, deleteTypeCritere
 } from "../controllers/criteresController.js";
 
 const router = express.Router();
@@ -74,10 +74,16 @@ router.get('/typeCritere/:id', getTypeCritById);
 router.post('/typeCriteres', postTypesCriteres);
 
 /**
- POST uri/criteres/typeCriteres
- Insert un nouveau type de criteres en database
+ PUT uri/criteres/typeCriteres
+ Update un nouveau type de criteres en database
  **/
 router.put('/typeCriteres', putTypesCriteres);
+
+/**
+ DELETE uri/criteres/typeCriteres
+ Insert un nouveau type de criteres en database
+ **/
+router.delete('/typeCriteres', deleteTypeCritere);
 
 /**
  POST uri/criteres/process
