@@ -285,6 +285,22 @@ export const putTypesTris = (req, res) => {
         return res.status(400).send(error)
     })
 }
+export const deleteTypeTri = (req, res) => {
+    let typeTriId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('typeTriId', sql.Int, typeTriId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE TypesTris SET obsolete=@obsolete WHERE typeTriId=@typeTriId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
 
 /**
  * function use to insert a new place of AVO

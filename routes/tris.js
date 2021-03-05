@@ -8,7 +8,7 @@ import {
     getLieuxAVO,
     getMarket,
     postTypesTris,
-    postLieuAVO, getLieuxAvoById, putLieuAVO, getTypeTriById, putTypesTris, deleteAVO
+    postLieuAVO, getLieuxAvoById, putLieuAVO, getTypeTriById, putTypesTris, deleteAVO, deleteTypeTri
 } from '../controllers/trisController.js'
 
 const router = express.Router();
@@ -75,9 +75,15 @@ router.post('/typesTris', postTypesTris);
 
 /**
  * PUT uri/tris/typesTris
- * Enregistrer un nouveau type de tris
+ * Update un nouveau type de tris
  */
 router.put('/typesTris', putTypesTris);
+
+/**
+ * DELETE uri/tris/typesTris
+ * DELETE un type de tris
+ */
+router.delete('/typesTris', deleteTypeTri);
 
 /**
  * POST uri/tris/typesTris/AVO/Lieux
