@@ -163,7 +163,22 @@ export const putModele = (req, res) => {
         return res.status(400).send(error)
     })
 }
-
+export const deleteModele = (req, res) => {
+    let modeleId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('modeleId', sql.Int, modeleId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Modeles SET obsolete=@obsolete WHERE modeleId=@modeleId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
 /**
  * function use to register a new article in database
  * @param req

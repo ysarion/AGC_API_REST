@@ -7,7 +7,7 @@ import {
     getArticleByCode,
     postModele,
     postArticle,
-    getModeleById, putModele, putArticle, deleteArticle
+    getModeleById, putModele, putArticle, deleteArticle, deleteModele
 } from '../controllers/articlesController.js'
 
 const router = express.Router();
@@ -59,6 +59,12 @@ router.post('/modeles', postModele)
  * route use to update a modele in database
  */
 router.put('/modeles', putModele)
+
+/**
+ * DELETE uri/articles/modeles
+ * route use to delete a modele in database
+ */
+router.delete('/modeles', deleteModele)
 
 /**
  * POST uri/articles
