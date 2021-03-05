@@ -486,3 +486,19 @@ export const putMachines = (req, res) => {
         return res.status(400).send('Erreur lors de l\'update de la machine : ' + error)
     })
 }
+export const deleteMachine = (req, res) => {
+    let machineId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('machineId', sql.Int, machineId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Machines SET obsolete=@obsolete WHERE machineId=@machineId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
