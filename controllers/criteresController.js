@@ -106,7 +106,6 @@ export const getAllCritProcessRelation = (req, res) => {
     })()
 }
 
-//@todo PUT METHODE FOR CRITERES / TYPE CRITERE / Process
 export const postCriteres = (req, res) => {
     let critere = Joi.object({
         critereId: Joi.number().integer().allow(null),
@@ -189,6 +188,22 @@ export const putCritere = (req, res) => {
             }).then(() => {
             return res.status(200).send('the critere was successfully update')
         }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
+export const deleteCritere = (req, res) => {
+    let critereId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('critereId', sql.Int, critereId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Criteres SET obsolete=@obsolete WHERE critereId=@critereId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
             return res.status(400).send(error)
         })
     }).catch(error => {
@@ -291,3 +306,20 @@ export const putProcess = (req, res) => {
         return res.status(400).send(error)
     })
 }
+export const deleteProcess = (req, res) => {
+    let processId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('processId', sql.Int, processId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Process SET obsolete=@obsolete WHERE processId=@processId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
+
