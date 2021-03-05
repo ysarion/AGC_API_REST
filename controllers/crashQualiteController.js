@@ -353,6 +353,22 @@ export const putZones = (req, res) => {
         return res.status(400).send('Erreur lors de l\'update de la zone : ' + error)
     })
 }
+export const deleteZone = (req, res) => {
+    let zoneId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('zoneId', sql.Int, zoneId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Zones SET obsolete=@obsolete WHERE zoneId=@zoneId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
 
 export const postLignes = (req, res) => {
     let ligneSchema = Joi.object({

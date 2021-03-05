@@ -15,7 +15,7 @@ import {
     postLignes,
     postMachines,
     getMachinesLignesRelation,
-    getLigneById, putLigne, getZoneById, putZones, getMachineById, putMachines, deleteLignes, deleteMachine
+    getLigneById, putLigne, getZoneById, putZones, getMachineById, putMachines, deleteLignes, deleteMachine, deleteZone
 } from '../controllers/crashQualiteController.js';
 
 const router = express.Router();
@@ -123,6 +123,12 @@ router.post('/zones', postZones);
  * Update une zone
  */
 router.put('/zones', putZones);
+
+/**
+ * DELETE uri/crashQualites/zones
+ * DELETE une zone
+ */
+router.delete('/zones', deleteZone);
 
 /**
  * POST uri/crashQualites/zones/lignes
