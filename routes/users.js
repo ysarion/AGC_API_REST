@@ -6,7 +6,7 @@ import {
     postEquipe,
     getEquipes,
     getRoles,
-    getEquipeById, putEquipe, getUserById, putUser
+    getEquipeById, putEquipe, getUserById, putUser, deleteEquipe
 } from '../controllers/usersController.js'
 
 const router = express.Router();
@@ -58,6 +58,8 @@ router.post('/equipe', postEquipe);
  * route use to update an equipe
  **/
 router.put('/equipe', putEquipe);
+
+router.delete('/equipe', deleteEquipe);
 export default router;
 
 

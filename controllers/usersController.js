@@ -202,6 +202,7 @@ export const putUser = (req, res) => {
         return res.status(400).send(error)
     })
 }
+
 export const postEquipe = (req, res) => {
     let equipe = Joi.object({
         equipe: Joi.string().min(1).required(),
@@ -238,6 +239,22 @@ export const putEquipe = (req, res) => {
             .input('equipeId', sql.Int, req.body.equipeId)
             .input('equipe', sql.VarChar, req.body.equipe)
             .query('UPDATE Equipes SET equipe=@equipe WHERE equipeId=@equipeId;')
+            .then(result => {
+                return res.status(200).send(result.rowsAffected)
+            }).catch(error => {
+            return res.status(400).send(error)
+        })
+    }).catch(error => {
+        return res.status(400).send(error)
+    })
+}
+export const deleteEquipe = (req, res) => {
+    let equipeId = req.body.id
+    sql.connect(config).then(pool => {
+        pool.request()
+            .input('equipeId', sql.Int, equipeId)
+            .input('obsolete', sql.Bit, req.body.obsolete)
+            .query('UPDATE Equipes SET obsolete=@obsolete WHERE equipeId=@equipeId;')
             .then(result => {
                 return res.status(200).send(result.rowsAffected)
             }).catch(error => {
