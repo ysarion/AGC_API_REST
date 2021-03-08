@@ -138,7 +138,7 @@ export const getTri = (req, res) => {
             let userId = result.recordset[0].fk_user;
             let User = await sql.query('select * from Users where idUser ='+userId);
             let articleId = result.recordset[0].fk_article;
-            let article = await sql.query('select * from Articles where articleId ='+articleId);
+            let article = await sql.query('select * from Articles LEFT JOIN Modeles ON Articles.fk_model = Modeles.modeleId where articleId ='+articleId);
             let typeTriId = result.recordset[0].fk_typeTri;
             let typeTri = await sql.query('select * from TypesTris where typeTriId ='+typeTriId);
             let marketId = result.recordset[0].fk_market;
