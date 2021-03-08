@@ -85,7 +85,7 @@ export const getCrashQualite = (req, res) => {
                 statut: result.recordset[0].status,
                 user: SearchForUser.recordset[0],
                 article: SearchForArticle.recordset[0],
-                detetionCrash: {
+                detectionCrash: {
                     ligneId: SearchForDetectionCrash.recordset[0].fk_ligne,
                     ligne: SearchForDetectionCrash.recordset[0].ligne,
                     machineId: SearchForDetectionCrash.recordset[0].fk_machine,
