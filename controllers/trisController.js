@@ -135,15 +135,37 @@ export const getTri = (req, res) => {
             await sql.connect(config)
             let param = parseInt(req.params['id'])
             let result = await sql.query('select * from Tris where triId = ' + param)
+            let userId = result.recordset[0].fk_user;
+            let User = await sql.query('select * from Users where idUser ='+userId);
+            let articleId = result.recordset[0].fk_article;
+            let article = await sql.query('select * from Articles where articleId ='+articleId);
+            let typeTriId = result.recordset[0].fk_typeTri;
+            let typeTri = await sql.query('select * from TypesTris where typeTriId ='+typeTriId);
+            let marketId = result.recordset[0].fk_market;
+            let market = await sql.query('select * from Market where marketId ='+marketId);
+            let avoId = result.recordset[0].fk_LieuAVO;
+            let avo = await sql.query('select * from LieuxAVO where lieuAvoId ='+avoId);
+            let arrayToSend = {
+                triId: result.recordset[0].triId,
+                numGallia: result.recordset[0].numGallia,
+                numOS: result.recordset[0].numOS,
+                nbPieces: result.recordset[0].numOS,
+                commentaireGeneral: result.recordset[0].commentaireGeneral,
+                dateDebut: result.recordset[0].dateDebut,
+                dateFin: result.recordset[0].dateFin,
+                user: User.recordset[0],
+                article: article.recordset[0],
+                typeTri: typeTri.recordset[0],
+                market: market.recordset[0],
+                avo: avo.recordset[0],
+            };
             if (result.recordset[0] === undefined) res.status(400).send("Tri with the given id is not in database")
             else {
-                let SearchForCrit = await sql.query('select * from Tris_Criteres where FK_triId = ' + param)
-                let arrayToSend = result.recordset[0];
+                let SearchForCrit = await sql.query('select * from Tris_Criteres LEFT JOIN Criteres ON Tris_Criteres.FK_critereId = Criteres.critereId where FK_triId='+param)
                 arrayToSend['criteres'] = SearchForCrit.recordset
                 res.status(200).send(arrayToSend)
             }
         } catch (err) {
-            console.log(err);
             res.status(400).send('erreur : ' + err);
         }
     })()
