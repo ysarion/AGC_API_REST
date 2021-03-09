@@ -15,7 +15,16 @@ import {
     postLignes,
     postMachines,
     getMachinesLignesRelation,
-    getLigneById, putLigne, getZoneById, putZones, getMachineById, putMachines, deleteLignes, deleteMachine, deleteZone
+    getLigneById,
+    putLigne,
+    getZoneById,
+    putZones,
+    getMachineById,
+    putMachines,
+    deleteLignes,
+    deleteMachine,
+    deleteZone,
+    getDecisions
 } from '../controllers/crashQualiteController.js';
 
 const router = express.Router();
@@ -31,6 +40,12 @@ router.get('/', getCrashQualites);
  * Récupérer la liste de toutes les analyses de crash qualités
  */
 router.get('/analysesCrash', getAnalysesCrash);
+
+/**
+ * GET uri/crashQualites/analyseCrash/decisions
+ * Récupérer la liste de toutes les decisions.
+ */
+router.get('/analysesCrash/decisions', getDecisions);
 
 /**
  * GET uri/crashQualites/analyseCrash/id

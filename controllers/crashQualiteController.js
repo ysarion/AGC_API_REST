@@ -13,6 +13,19 @@ export const getCrashQualites = (req, res) => {
         }
     })()
 }
+export const getDecisions = (req, res) => {
+    sql.connect(config).then(pool => {
+        pool.request()
+            .query('SELECT * FROM Decisions')
+            .then(result => {
+                res.status(200).send(result.recordset)
+            }).catch(error => {
+            res.status(400).send(error)
+        })
+    }).catch(error => {
+        res.status(400).send(error)
+    })
+}
 export const getAnalysesCrash = (req, res) => {
     (async () => {
         try {
@@ -273,7 +286,8 @@ export const postCrashQualite = (req, res) => {
 export const postAnalyseCrash = (req, res) => {
     let analyseCrash = Joi.object({
         fk_crashQualite: Joi.number().integer().required(),
-        decision: Joi.string().allow(null).required(),
+        fk_decision: Joi.number().integer().required(),
+        description: Joi.string().allow(null).required(),
         piecesJointes: Joi.string().allow(null).required(),
         originCrash: {
             fk_ligne: Joi.number().integer().required(),
@@ -289,10 +303,11 @@ export const postAnalyseCrash = (req, res) => {
         pool.request()
             .input('fk_crashQualite', sql.Int, parseInt(req.body.fk_crashQualite))
             .input('piecesJointes', sql.VarChar, req.body.piecesJointes)
-            .input('decision', sql.VarChar, req.body.decision)
+            .input('fk_decision', sql.Int, req.body.fk_decision)
+            .input('description', sql.VarChar, req.body.description)
             .output("id", sql.Int)
-            .query('INSERT INTO AnalyseCrash (fk_crashQualite,decision,piecesJointes)  ' +
-                'values (@fk_crashQualite,@decision,@piecesJointes); SELECT SCOPE_IDENTITY() AS id;')
+            .query('INSERT INTO AnalyseCrash (fk_crashQualite,fk_decision,piecesJointes,description)  ' +
+                'values (@fk_crashQualite,@fk_decision,@piecesJointes,@description); SELECT SCOPE_IDENTITY() AS id;')
             .then(result => {
                 let analyseId = result.recordset[0].id
                 sql.connect(config).then(pool2 => {
