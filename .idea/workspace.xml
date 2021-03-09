@@ -20,7 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a08524c-11a3-4bdc-8e89-c382c95cbcd2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/controllers/crashQualiteController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/crashQualiteController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/articlesController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/articlesController.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +140,9 @@
       <workItem from="1614761571516" duration="7113000" />
       <workItem from="1614851276104" duration="22072000" />
       <workItem from="1614931817974" duration="11700000" />
-      <workItem from="1615191158984" duration="3291000" />
+      <workItem from="1615191158984" duration="10405000" />
+      <workItem from="1615222074766" duration="645000" />
+      <workItem from="1615277278484" duration="3002000" />
     </task>
     <servers />
   </component>
@@ -171,10 +174,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="542" y="214" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1611748400122" />
-    <state x="549" y="154" key="FileChooserDialogImpl" timestamp="1615196222777">
+    <state x="549" y="154" key="FileChooserDialogImpl" timestamp="1615277378555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1615196222777" />
+    <state x="549" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1615277378555" />
     <state x="593" y="332" key="Github.CreateGistDialog" timestamp="1611140712442">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -183,6 +186,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1610961919085" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1615216572569">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1615216572569" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1614852892936">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

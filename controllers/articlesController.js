@@ -111,8 +111,6 @@ export const getArticleByCode = (req, res) => {
     })()
 }
 
-//@todo PUT METHODE FOR ARTICLE / MODELE
-
 /**
  * function use to register a new modele
  * @param req
@@ -135,9 +133,9 @@ export const postModele = (req, res) => {
             request
                 .input('modele', sql.VarChar(80), req.body.modele)
                 .query('INSERT INTO Modeles (modele) values (@modele);')
-            return res.status(200).send("The new \"modele\" was successfully register")
+            return res.status(200).send(JSON.parse("The new modele was successfully register"))
         } catch (e) {
-            return res.status(500).send("erreur : " + e);
+            return res.status(500).send({message: e});
         }
     })();
 }
@@ -207,9 +205,9 @@ export const postArticle = (req, res) => {
                 .input('descriptionSAP', sql.VarChar, req.body.descriptionSAP)
                 .input('partNumber', sql.VarChar, req.body.partNumber)
                 .query('INSERT INTO Articles (codeArticle,fk_model,descriptionSAP,partNumber) values (@codeArticle,@fk_model,@descriptionSAP,@partNumber);')
-            return res.status(200).send("The new \"article\" was successfully register")
+            return res.status(200).send({message: "L'article a bien été enregistré."})
         } catch (e) {
-            return res.status(500).send("erreur : " + e);
+            return res.status(500).send({error: e});
         }
     })();
 }
