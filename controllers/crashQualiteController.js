@@ -30,7 +30,7 @@ export const getAnalysesCrash = (req, res) => {
     (async () => {
         try {
             await sql.connect(config)
-            let result = await sql.query('SELECT * LEFT JOIN Decisions ON AnalyseCrash.fk_decision = Decisions.decisionId FROM AnalyseCrash')
+            let result = await sql.query('SELECT * FROM AnalyseCrash LEFT JOIN Decisions ON AnalyseCrash.fk_decision = Decisions.decisionId')
             return res.status(200).send(result.recordset);
         } catch (e) {
             return res.status(400).send('erreur' + e);
@@ -42,7 +42,7 @@ export const getAnalyseCrash = (req, res) => {
         try {
             let idCrash = req.params['id'];
             await sql.connect(config)
-            let result = await sql.query('SELECT * LEFT JOIN Decisions ON AnalyseCrash.fk_decision = Decisions.decisionId FROM AnalyseCrash where fk_crashQualite =' + idCrash)
+            let result = await sql.query('SELECT * FROM AnalyseCrash LEFT JOIN Decisions ON AnalyseCrash.fk_decision = Decisions.decisionId where fk_crashQualite =' + idCrash)
 
             let SearchForOriginCrash = await sql.query(
                 "select OrigineCrash.fk_ligne,ligne,OrigineCrash.fk_machine,machine,OrigineCrash.fk_analyseCrash from OrigineCrash " +
@@ -53,6 +53,7 @@ export const getAnalyseCrash = (req, res) => {
             let jsonToSend = {
                 analyseCrashId: result.recordset[0].analyseCrashId,
                 decision: result.recordset[0].decision,
+                description: result.recordset[0].description,
                 piecesJointes: result.recordset[0].piecesJointes,
                 fk_crashQualite: result.recordset[0].fk_crashQualite,
                 origineCrash: {
