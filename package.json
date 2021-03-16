@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "joi": "^17.3.0",
     "mssql": "^6.3.1",
+    "pm2": "^4.5.5",
     "tedious": "^11.0.1"
   },
   "devDependencies": {

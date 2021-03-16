@@ -4,7 +4,21 @@ services:
     container_name: sql-server-db
     image: ysarion/agc_api:v2
     ports:
-    - "1433:1433"
+      - "1433:1433"
+    expose:
+      - "1433"
     environment:
       SA_PASSWORD: "mySuperStrongP@ssword"
       ACCEPT_EULA: "Y"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_quality
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sql-server
+    environment:
+      HOSTNAME: "host.docker.internal"
+
